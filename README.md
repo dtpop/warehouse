@@ -11,3 +11,5 @@ Die Ausgabe basiert auf Fragmenten, sodass der Shop sich in jede Umgebung einfü
 Über das AddOn ycom ist eine Benutzerverwaltung möglich.
 
 Aktuell handelt es sich noch um einen Prototyp.
+
+Eine Livevorschau kann man hier anschauen: https://rexshop.dtp-net.de/ - diese ist allerdings nicht zwingend auf dem neuesten Stand.
