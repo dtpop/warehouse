@@ -1,7 +1,7 @@
 # warehouse
 Warehouse: REDAXO Shop AddOn
 
-Das Warehouse stellt Basisfunktinoalitäten für einen Webshop in REDAXO zur Verfügung:
+Das Warehouse stellt Basisfunktionalitäten für einen Webshop in REDAXO zur Verfügung:
 
 * ein flexible Produktdatenbank auf yform Basis für Kategorien, beliebig viele Unterkategorien, Artikel, Varianten und Attribute
 * einen Warenkorb
