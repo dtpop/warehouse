@@ -1,0 +1,17 @@
+package: warehouse
+version: '0.1'
+author: Wolfgang Bund
+
+page:
+    title: Warehouse
+    perm: warehouse[params]
+    pjax: true
+    subpages:
+        settings: { title: 'Einstellungen', perm: admin }
+        setup: { title: 'Setup', perm: admin }
+        info: { title: 'Info' }
+
+requires:
+    redaxo: '^5.5'
+    packages:
+        yform/manager: '>3'
