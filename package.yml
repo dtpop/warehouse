@@ -7,7 +7,7 @@ page:
     perm: warehouse[params]
     pjax: true
     subpages:
-        settings: { title: 'Einstellungen', perm: admin }
+        settings: { title: 'Einstellungen' }
         setup: { title: 'Setup', perm: admin }
         info: { title: 'Info' }
 

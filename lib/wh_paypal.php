@@ -248,12 +248,6 @@ class wh_paypal {
         }
 //            ResultPrinter::printResult("Get Payment", "Payment", $payment->getId(), null, $payment);
 
-        // log payment
-        warehouse::paypal_approved($payment);
-        
-        warehouse::clear_cart();
-        
-        rex_redirect(rex_config::get('warehouse','thankyou_page'));
 
 
 //        return $payment;

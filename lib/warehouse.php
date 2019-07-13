@@ -5,7 +5,7 @@ class warehouse {
     static $fields = [
         'firstname', 'lastname', 'birthdate', 'company', 'department', 'address', 'zip', 'city', 'country', 'email', 'phone',
         'to_firstname', 'to_lastname', 'to_company', 'to_department', 'to_address', 'to_zip', 'to_city', 'to_country',
-        'separate_delivery_address', 'payment_type', 'note'
+        'separate_delivery_address', 'payment_type', 'note', 'iban', 'bic', 'direct_debit_name'
     ];
 
     public static function ensure_userdata_fields ($user_data) {
@@ -67,6 +67,8 @@ class warehouse {
         $art['description'] = $article->art_description;
         $art['image'] = $article->get_image();
         $art['art_id'] = $art_id;
+        $art['var_id'] = $article->var_id;
+        $art['var_whvarid'] = $article->var_whvarid;
         $art['whid'] = $article->whid;
         $art['tax'] = $article->tax;
         $art['free_shipping'] = $article->free_shipping;
@@ -293,7 +295,7 @@ class warehouse {
         $shipping = 0;
         foreach ($cart as $item) {
             if (!$item['free_shipping']) {
-                $shipping = rex_config::get('warehouse', 'shipping');
+                $shipping = wh_shipping::get_cost();
             }
         }
         return $shipping;
@@ -368,7 +370,7 @@ class warehouse {
             'paypal_id' => $paypal_id,
             'order_json' => json_encode([
                 'cart' => $cart,
-                'address' => $user_data
+                'user_data' => $user_data
             ]),
             'createdate' => date('Y-m-d H:i:s'),
             'order_text' => $order_text,
@@ -407,7 +409,7 @@ class warehouse {
         $out .= PHP_EOL;
 
         foreach ($cart as $pos) {
-            $out .= mb_str_pad(mb_substr(html_entity_decode($pos['whid']), 0, 20), 20, ' ', STR_PAD_RIGHT);
+            $out .= mb_str_pad(mb_substr(html_entity_decode($pos['var_whvarid']), 0, 20), 20, ' ', STR_PAD_RIGHT);
             $out .= mb_str_pad(mb_substr(html_entity_decode($pos['name']), 0, 45), 45, ' ', STR_PAD_RIGHT);
             $out .= mb_str_pad($pos['count'], 7, ' ', STR_PAD_LEFT);
             $out .= mb_str_pad(number_format($pos['price_netto'], 2), 10, ' ', STR_PAD_LEFT);
@@ -476,6 +478,16 @@ class warehouse {
         $out .= PHP_EOL;
         $out .= 'Zahlungsweise: ' . self::get_payment_type($user_data['payment_type']) . PHP_EOL;
         $out .= PHP_EOL;
+        if ($user_data['payment_type'] == 'direct_debit') {
+            $out .= 'IBAN: ' . $user_data['iban'] . PHP_EOL;
+            $out .= 'BIC: ' . $user_data['bic'] . PHP_EOL;
+            if ($user_data['direct_debit_name']) {
+                $out .= 'Kontoinhaber: ' . $user_data['direct_debit_name'] . PHP_EOL;
+            } else {
+                $out .= 'Kontoinhaber: ' . $user_data['firstname'] . ' ' . $user_data['lastname'] . PHP_EOL;
+            }
+            
+        }
 
         return $out;
     }
@@ -516,7 +528,9 @@ class warehouse {
     public static function save_userdata_in_session($params) {
         $value_pool = $params->params['value_pool']['sql'];
         foreach (self::$fields as $field) {
-            $value_pool['to_' . $field] = $value_pool['to_' . $field] ?: $value_pool[$field];
+            if (in_array('to_'.$field,self::$fields)) {
+                $value_pool['to_' . $field] = $value_pool['to_' . $field] ?: $value_pool[$field];
+            }
         }
         rex_set_session('user_data', $value_pool);
     }
@@ -560,6 +574,7 @@ class warehouse {
             'prepayment'=>'Vorauskasse',
             'invoice'=>'Rechnung',
             'paypal'=>'Paypal',
+            'direct_debit'=>'SEPA Lastschrift',
             ];
         if (isset($payment_types[$payment_key])) {
             return $payment_types[$payment_key];

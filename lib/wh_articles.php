@@ -20,7 +20,7 @@ class wh_articles extends \rex_yform_manager_dataset {
 
     public function get_name() {
         if (isset($this->var_id)) {
-            return $this->art_name . ' &ndash; ' . $this->var_name;
+            return $this->art_name . ' - ' . $this->var_name;
         } else {
             return $this->art_name;
         }
@@ -110,6 +110,7 @@ class wh_articles extends \rex_yform_manager_dataset {
                     ->select('var.image', 'var_image')
                     ->select('var.freeprice', 'var_freeprice')
                     ->select('var.id', 'var_id')
+                    ->select('var.whvarid', 'var_whvarid')
                     ->select('var.price', 'var_price')
                     ->select('var.gallery', 'var_gallery')
                     ->select('cat.name_' . $clang, 'cat_name')
