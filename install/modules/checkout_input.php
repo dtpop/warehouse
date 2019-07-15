@@ -1,1 +1,1 @@
-<?php /* UK . 390 . Checkout - Adresseingabe - Input - Id: 14 */ ?>
+<?php /* Checkout - Adresseingabe - Input */ ?>

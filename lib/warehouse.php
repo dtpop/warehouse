@@ -14,19 +14,21 @@ class warehouse {
                 $user_data[$field] = '';
             }            
         }
-        $ycom_user = rex_ycom_auth::getUser();
-        if ($ycom_user) {
-            $ycom_userdata = $ycom_user->getData();
-            // Sonderfall name
-            if ($user_data['lastname'] == '') {
-                $user_data['lastname'] = $ycom_userdata['name'];
-            }
-            foreach ($user_data as $k=>$v) {
-                if (isset($ycom_userdata[$k]) && $v == '') {
-                    $user_data[$k] = $ycom_userdata[$k];
+        if (rex_addon::get('ycom')->isAvailable()) {
+            $ycom_user = rex_ycom_auth::getUser();
+            if ($ycom_user) {
+                $ycom_userdata = $ycom_user->getData();
+                // Sonderfall name
+                if ($user_data['lastname'] == '') {
+                    $user_data['lastname'] = $ycom_userdata['name'];
                 }
+                foreach ($user_data as $k=>$v) {
+                    if (isset($ycom_userdata[$k]) && $v == '') {
+                        $user_data[$k] = $ycom_userdata[$k];
+                    }
+                }
+    //            dump($ycom_user->getData());
             }
-//            dump($ycom_user->getData());
         }
 
         return $user_data;
@@ -48,7 +50,7 @@ class warehouse {
 
     public static function add_to_cart() {
         $added = 0;
-        $art_id = rex_request('art_id');
+        $art_id = trim(rex_request('art_id'),'_');
         $article = wh_articles::get_article($art_id);
         $attr_ids = rex_request('wh_attr','array',[]);
         $art_uid = trim($art_id . '$$' . implode('$$',$attr_ids),'$');
@@ -92,6 +94,7 @@ class warehouse {
         }
 
         rex_set_session('wh_cart', $cart);
+        dump($cart);
         self::cart_recalc();
         self::redirect_from_cart($added,1);
     }
@@ -182,14 +185,16 @@ class warehouse {
         if (rex_request('action') == 'modify_cart' || rex_request('action') == 'add_group_to_cart') {
             $added = 1;
         }
-
         
         if (rex_session('current_page') && (!$old_page_id || $force_current_page)) {
             $prev_url = self::clean_url(rex_session('current_page'));
             $deli = strpos($prev_url,'?') ? '&' : '?';
-            rex_response::sendRedirect($prev_url . $deli .'showcart=1');
+            if (rex_config::get('warehouse','cart_mode') == 'cart') {
+                rex_redirect(rex_config::get('warehouse','cart_page'));
+            } else {
+                rex_response::sendRedirect($prev_url . $deli .'showcart=1');
+            }
         }
-
 
         if ($added && $old_page_id > 0) {
             // wenn in den Settings auf Cart eingestellt ist, auf Cart weiterleiten

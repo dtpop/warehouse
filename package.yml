@@ -9,7 +9,7 @@ page:
     subpages:
         settings: { title: 'Einstellungen' }
         setup: { title: 'Setup', perm: admin }
-        info: { title: 'Info' }
+        info: { title: 'Info', itemclass: pull-right }
 
 requires:
     redaxo: '^5.5'

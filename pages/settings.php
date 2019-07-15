@@ -40,9 +40,6 @@ $field->setLabel('Währung (z.B. EUR)');
 $field = $form->addTextField('currency_symbol');
 $field->setLabel('Währungssymbol (z.B. €)');
 
-$field = $form->addTextField('shipping');
-$field->setLabel('Versandkosten');
-
 $field = $form->addTextField('tax_value');
 $field->setLabel('Steuersatz [%]');
 

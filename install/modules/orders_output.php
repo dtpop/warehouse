@@ -1,4 +1,4 @@
-<?php /* UK . 450 . Meine Bestellungen - Output - Id: */
+<?php /* Meine Bestellungen - Output */
 
 
 if ($order_id = rex_get('order_id','int')) {
