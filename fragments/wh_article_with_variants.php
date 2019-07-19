@@ -27,7 +27,7 @@ $specifications = rex_var::toArray($main_item->specifications_1);
                             <input type="hidden" name=action value="add_to_cart">
                             <div class="grid-x grid-margin-x">
                                 <div class="cell medium-6">
-                                    <p class="priceline"><?= $item->var_name ?> - <?= $item->get_price(true) ?></p>
+                                    <p class="priceline"><?= $item->var_name ?: $item->name_1 ?> - <?= $item->get_price(true) ?></p>
                                 </div>
                               <div class="cell medium-6 wh-order-cell">
                                   <label for="wh_count_<?= $item->get_art_id() ?>" class="button tiny switch_count" data-value="-1">-</label><input name="order_count" type="text" class="order_count" id="wh_count_<?= $item->get_art_id() ?>" value="1"><label for="wh_count_<?= $item->get_art_id() ?>" class="button tiny switch_count" data-value="+1">+</label>

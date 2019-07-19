@@ -46,7 +46,7 @@ Für alle anderen Seiten gibt es die vorbereiteten Module. Diese also einfach au
 
 ### Schritt 4 - das Warehouse konfigurieren
 
-Das Warehouse hat eine Konfigurationsseite. Die einzelnen Felder sind eigentlich selbsterklärend. Es muss nicht zwingend alles ausgefüllt werden.
+Das Warehouse hat eine Konfigurationsseite. Die einzelnen Felder sind selbsterklärend. Es muss nicht zwingend alles ausgefüllt werden.
 
 ### Schritt 5 - weitere Konfigurationen
 
@@ -57,3 +57,5 @@ Url muss konfiguriert werden. Im ersten Schritt ist wichtig, dass die Warehouse 
 ## Templates
 
 Es genügt ein einziges Template, welches den Artikel mit `REX_ARTICLE[]` ausgibt. Weitere Beschreibung folgt.
+
+## Fragmente

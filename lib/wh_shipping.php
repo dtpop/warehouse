@@ -14,12 +14,16 @@
 class wh_shipping {
     
     public static function get_cost() {
+        
+        // Nach Stück
         if (rex_config::get('warehouse','shipping_mode') == 'pieces') {
             $cart = warehouse::get_cart();
             $shipping_params = json_decode(rex_config::get('warehouse','shipping_parameters'));
             $sum_pcs = 0;
             foreach ($cart as $ci) {
-                $sum_pcs += $ci['count'];
+                if ((int) $ci['free_shipping'] < 1) {
+                    $sum_pcs += $ci['count'];
+                }
             }
             $shipping = rex_config::get('warehouse', 'shipping');
             foreach ($shipping_params as $param) {

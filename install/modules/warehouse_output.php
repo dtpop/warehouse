@@ -39,7 +39,7 @@ if (rex::isBackend()) {
             
 
             // Nur Artikel - keine Varianten
-            $articles = bd_articles::get_articles($data_id,[],false,false,false);
+            $articles = wh_articles::get_articles($data_id,[],false,false,false);
             if (isset($articles[0])) {
                 $fragment->setVar('items',$articles);
                 $fragment->setVar('path',$wh_prop['path']);

@@ -296,14 +296,7 @@ class warehouse {
      * @return type
      */
     public static function get_shipping_cost() {
-        $cart = self::get_cart();
-        $shipping = 0;
-        foreach ($cart as $item) {
-            if (!$item['free_shipping']) {
-                $shipping = wh_shipping::get_cost();
-            }
-        }
-        return $shipping;
+        return wh_shipping::get_cost();
     }
 
     public static function get_cart() {
