@@ -61,3 +61,12 @@ if (rex::isBackend()) {
 }
 
 ?>
+<div class="grid-container fluid">
+    <div class="grid-container">
+        <div class="grid-x grid-padding-x">            
+            <div class="cell small-12">
+                <?= $yf->getForm() ?>
+            </div>
+        </div>
+    </div>
+</div>
