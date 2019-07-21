@@ -374,17 +374,18 @@ class warehouse {
             'order_text' => $order_text,
             'firstname' => $user_data['firstname'],
             'lastname' => $user_data['lastname'],
-            'birthdate' => $user_data['birthdate'],
+            'birthdate' => $user_data['birthdate'] ?: '',
             'address' => $user_data['address'],
             'zip' => $user_data['zip'],
             'city' => $user_data['city'],
             'email' => $user_data['email']
         ];
-        $ycom_user = rex_ycom_auth::getUser();
-        if ($ycom_user) {
-            $values['ycom_userid'] = $ycom_user->id;
+        if (rex_addon::get('ycom')->isAvailable()) {
+            $ycom_user = rex_ycom_auth::getUser();
+            if ($ycom_user) {
+                $values['ycom_userid'] = $ycom_user->id;
+            }
         }
-
         
         $sql->setTable(rex::getTable('wh_orders'));
         $sql->setValues($values);
