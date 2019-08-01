@@ -1,8 +1,4 @@
-<?php /* wh05 . Katalog - Liste und Detailansicht Shop - Output
-
-https://chekromul.github.io/uikit-ecommerce-template
-
- *  */ 
+<?php /* wh05 . Katalog - Liste und Detailansicht Shop - Output  */ 
 $wh_prop = rex::getProperty('wh_prop');
 
 if (rex::isBackend()) {
@@ -37,11 +33,12 @@ if (rex::isBackend()) {
                 echo $fragment->parse('wh_catalog.php');
             }
             
-
             // Nur Artikel - keine Varianten
-            $articles = wh_articles::get_articles($data_id,[],false,false,false);
+            $articles = wh_articles::get_articles($data_id,[]);
+            $category = wh_categories::get($data_id)->getData();
             if (isset($articles[0])) {
                 $fragment->setVar('items',$articles);
+                $fragment->setVar('category',$category);
                 $fragment->setVar('path',$wh_prop['path']);
                 echo $fragment->parse('wh_article_with_variants.php');
             }

@@ -105,7 +105,8 @@ class wh_paypal {
 
         $redirectUrls = new \PayPal\Api\RedirectUrls();
         
-        $redirectUrls->setReturnUrl(trim(rex::getServer(), '/') . rex_getUrl(rex_config::get('warehouse', 'paypal_page_success'),'',json_decode(rex_config::get('warehouse','paypal_getparams'),true),'&'));
+        $params = json_decode(rex_config::get('warehouse','paypal_getparams'),true);
+        $redirectUrls->setReturnUrl(trim(rex::getServer(), '/') . rex_getUrl(rex_config::get('warehouse', 'paypal_page_success'),'',$params ?? [],'&'));
 //        $redirectUrls->setReturnUrl(trim(rex::getServer(), '/') . '/index.php?article_id=' . rex_config::get('warehouse', 'paypal_page_success'));
         $redirectUrls->setCancelUrl(trim(rex::getServer(), '/') . rex_getUrl(rex_config::get('warehouse', 'paypal_page_error')));
 

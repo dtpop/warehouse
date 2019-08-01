@@ -16,6 +16,8 @@ if (rex::isBackend()) {
     $yf->setObjectparams('form_action', rex_getUrl());
     $yf->setObjectparams('form_class', 'rex-yform wh-form summary');
     $yf->setObjectparams('form_anchor', 'formular');
+    $yf->setObjectparams('form_ytemplate', 'uikit,bootstrap,classic');
+    $yf->setObjectparams('error_class', 'uk-form-danger');
 
     $yf->setValueField('hidden', ['email', $wh_userdata['email']]);
     $yf->setValueField('hidden', ['firstname', $wh_userdata['firstname']]);
@@ -34,15 +36,15 @@ if (rex::isBackend()) {
 
     $yf->setValueField('html', ['', $wh_cart_text]);
 
-    $yf->setValueField('checkbox', ['agb_ok', '{{ Ich akzeptiere die AGBs|format(' . rex_getUrl(42) . ') }}', '0,1', '0']);
-    $yf->setValueField('checkbox', ['dsgvo_ok', '{{ Ich habe die Datenschutzbestimmungen gelesen.|format(' . rex_getUrl(4) . ') }}', '0,1', '0']);
+    $yf->setValueField('checkbox', ['agb_ok', '{{ agb_dsgvo_label|format(' . rex_getUrl(14) . ',' . rex_getUrl(15) . ') }}', '0,1', '0']);
+//    $yf->setValueField('checkbox', ['dsgvo_ok', '{{ Ich habe die Datenschutzbestimmungen gelesen.|format(' . rex_getUrl(4) . ') }}', '0,1', '0']);
 
     $yf->setValueField('html', ['', '</div><div class="col-4_md-12 right-col relative align-center">']); // col | col
 
-    $yf->setValueField('submit', ['send', '{{ Jetzt kaufen }}', '', '[no_db]', '', 'button uk-margin-top']);
+    $yf->setValueField('submit', ['send', '{{ Jetzt kaufen }}', '', '[no_db]', '', 'uk-button uk-button-primary uk-margin-top']);
 
     $yf->setValidateField('empty', ['agb_ok', '{{ Sie müssen die AGBs akzeptieren. }}']);
-    $yf->setValidateField('empty', ['dsgvo_ok', '{{ Sie müssen die Datenschutzbestimmungen akzeptieren. }}']);
+//    $yf->setValidateField('empty', ['dsgvo_ok', '{{ Sie müssen die Datenschutzbestimmungen akzeptieren. }}']);
 
 
 
@@ -61,12 +63,5 @@ if (rex::isBackend()) {
 }
 
 ?>
-<div class="grid-container fluid">
-    <div class="grid-container">
-        <div class="grid-x grid-padding-x">            
-            <div class="cell small-12">
-                <?= $yf->getForm() ?>
-            </div>
-        </div>
-    </div>
-</div>
+
+<?= $yf->getForm() ?>

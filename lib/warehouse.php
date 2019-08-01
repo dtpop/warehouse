@@ -408,7 +408,11 @@ class warehouse {
         $out .= PHP_EOL;
 
         foreach ($cart as $pos) {
-            $out .= mb_str_pad(mb_substr(html_entity_decode($pos['var_whvarid']), 0, 20), 20, ' ', STR_PAD_RIGHT);
+            if ($pos['var_whvarid']) {
+                $out .= mb_str_pad(mb_substr(html_entity_decode($pos['var_whvarid']), 0, 20), 20, ' ', STR_PAD_RIGHT);
+            } else {
+                $out .= mb_str_pad(mb_substr(html_entity_decode($pos['whid']), 0, 20), 20, ' ', STR_PAD_RIGHT);                
+            }
             $out .= mb_str_pad(mb_substr(html_entity_decode($pos['name']), 0, 45), 45, ' ', STR_PAD_RIGHT);
             $out .= mb_str_pad($pos['count'], 7, ' ', STR_PAD_LEFT);
             $out .= mb_str_pad(number_format($pos['price_netto'], 2), 10, ' ', STR_PAD_LEFT);
@@ -461,8 +465,10 @@ class warehouse {
         $out .= $user_data['phone'] ? 'Telefon: ' . $user_data['phone'] . PHP_EOL : '';
         $out .= $user_data['email'] ? $user_data['email'] . PHP_EOL : '';
         $out .= PHP_EOL;
-        $out .= 'Geburtsdatum:' . PHP_EOL;
-        $out .= $user_data['birthdate'] . PHP_EOL;
+        if (isset($user_data['birthdate']) && $user_data['birthdate']) {
+            $out .= 'Geburtsdatum:' . PHP_EOL;
+            $out .= $user_data['birthdate'] . PHP_EOL;
+        }
         $out .= PHP_EOL;
         $out .= 'Lieferadresse' . PHP_EOL;
         $out .= PHP_EOL;

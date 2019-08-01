@@ -22,7 +22,7 @@ $elementAttributes['class'] = trim($elementType.' '.'uk-form-controls '.$this->g
 
 <?php $choiceOutput = function (rex_yform_choice_view $view) use ($elementAttributes, $elementType) { ?>
     <div<?= rex_string::buildAttributes($elementAttributes) ?>>
-        <label>
+        <label class="uk-form-label">
             <input class="uk-<?= $elementType ?>"
                 value="<?= rex_escape($view->getValue()) ?>"
                 <?= (in_array($view->getValue(), $this->getValue(), true) ? ' checked="checked"' : '') ?>
@@ -45,7 +45,7 @@ $elementAttributes['class'] = trim($elementType.' '.'uk-form-controls '.$this->g
 
 <div<?= rex_string::buildAttributes($groupAttributes) ?>>
     <?php if ($this->getLabel()): ?>
-        <label class="form-control-label" for="<?= $this->getFieldId() ?>">
+        <label class="form-control-label uk-form-label" for="<?= $this->getFieldId() ?>">
             <?= rex_escape($this->getLabelStyle($this->getLabel())) ?>
         </label>
     <?php endif ?>

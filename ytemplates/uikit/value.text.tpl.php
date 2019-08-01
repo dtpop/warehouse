@@ -46,6 +46,10 @@ $attributes = [
     'value' => $value,
 ];
 
+if ($this->getWarningClass()) {
+    $attributes['class'] .= ' uk-form-danger';
+}
+
 $attributes = $this->getAttributeElements($attributes, ['placeholder', 'autocomplete', 'pattern', 'required', 'disabled', 'readonly']);
 
 echo '<div class="'.$class_group.'" id="'.$this->getHTMLId().'">

@@ -115,8 +115,8 @@ class wh_nav {
         $out .= '
           <li class="' . $class . '">
             <a href="' . $cat->getUrl() . '" class="' . $class . '">' . $cat->getName() . '</a>';
-        if (!empty($_categories) && (is_array($this->currentPath) && ($this->fullTree || in_array($cat->getId(), $this->currentPath))) && $lev < $this->maxLev
-        ) {
+        if (!empty($_categories) && ($this->fullTree || (is_array($this->currentPath) && in_array($cat->getId(), $this->currentPath)) && $lev < $this->maxLev
+        )) {
             if (isset($this->ulWrapper[$lev]) && $this->ulWrapper[$lev]) {
                 $out .= $this->ulWrapper[$lev][0];
             }

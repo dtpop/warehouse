@@ -1,10 +1,7 @@
-<?php /*
-https://chekromul.github.io/uikit-ecommerce-template
- *  Ausgabe der Katalog-Seite (Übersicht)
- *  */ ?>
+<?php /*  Ausgabe der Katalog-Seite (Übersicht) */ ?>
 <div class="uk-grid-margin uk-first-column">
     <div class="uk-grid-medium uk-grid" uk-grid="">
-        <aside class="uk-width-1-4 uk-visible@m tm-aside-column uk-first-column">
+        <!-- aside class="uk-width-1-4 uk-visible@m tm-aside-column uk-first-column">
             <nav class="uk-card uk-card-default uk-card-body uk-card-small uk-sticky" uk-sticky="bottom: true; offset: 90" style="">
                 <ul class="uk-nav uk-nav-default" uk-scrollspy-nav="closest: li; scroll: true; offset: 90">
                     <?php foreach ($this->tree as $main_item) : ?>
@@ -13,12 +10,12 @@ https://chekromul.github.io/uikit-ecommerce-template
                 </ul>
             </nav>
             <div class="uk-sticky-placeholder" style="height: 185px; margin: 0px;" hidden=""></div>
-        </aside>
+        </aside -->
         <div class="uk-width-1-1 uk-width-expand@m">
             <div class="uk-grid-medium uk-child-width-1-1" uk-grid>
                 <?php foreach ($this->tree as $main_item) : ?>
                     <section id="<?= rex_string::normalize($main_item['name_raw']) ?>">
-                        <div class="uk-card uk-card-default uk-card-small tm-ignore-container">
+                        <div class="uk-card uk-card-default uk-card-small">
                             <header class="uk-card-header">
                                 <div class="uk-grid-small uk-flex-middle" uk-grid>
                                     <?php if ($main_item['image']) : ?>
@@ -43,14 +40,5 @@ https://chekromul.github.io/uikit-ecommerce-template
                 <?php endforeach ?>
             </div>
         </div>
-        <?php if (isset($this->path) && $this->path) : ?>
-        <div class="uk-width-1-1 uk-width-expand@m">
-            <div>
-                <?php if (count($this->path)) : ?>
-                    <a href="<?= rex_getUrl() ?>">{{ zur Übersicht }}</a>
-                <?php endif // hier ggf. Pfadansicht erweitern ?>
-            </div>
-        </div>
-        <?php endif ?>
     </div>
 </div>

@@ -5,7 +5,8 @@ author: Wolfgang Bund
 page:
     title: Warehouse
     perm: warehouse[params]
-    pjax: true
+    pjax: true    
+    icon: rex-icon fa-shopping-cart
     subpages:
         settings: { title: 'Einstellungen' }
         setup: { title: 'Setup', perm: admin }

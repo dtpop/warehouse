@@ -96,5 +96,12 @@ class wh_helper {
         
     }
     
+    public static function uk_format_text ($text) {
+        $search = ['<ul>'];
+        $replace = ['<ul class="uk-list uk-list-bullet">'];
+        return str_replace($search,$replace,$text);
+        
+    }
+    
     
 }
