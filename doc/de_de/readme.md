@@ -16,6 +16,7 @@ Zusätzlich sind folgende AddOns hilfreich:
 - theme
 - adminer
 - Quick Navigation
+- TinyMCE
 
 Das Warehouse kann zusätzlich mit der Community ycom verbunden werden, sodass man eine Kundenverwaltung aufbauen kann, die Kunden sich registrieren können und Basisdaten (z.B. Adresse) in eine Bestellung übernommen werden kann.
 
@@ -146,8 +147,54 @@ Wenn ein Feld nicht gebraucht wird, so kann es in der Konfiguration des yform Ta
 
 Textfelder sind generell mit dem Feldnamensuffix `_1` angelegt. Damit lässt sich der Shop auch mehrsprachig umsetzen. Bei einer zweisprachigen Website müssen die benötigten Textfelder zusätzlich über yform und dem Suffix `_2` angelegt werden. In den Fragmenten bzw. bei der Ausgabe kann dann mit `"feldnamen_".rex_clang::getCurrentId()` auf das Feld zugegriffen werden.
 
+### Strukturierte Daten (structured data)
+
+Das Beispielfragment wh_scheme_article_with_variants gibt strukturierte Daten aus.
+
 ## Templates
 
-Die Templates benötigen nur geringe Anpassungen. Im Standardmodul für die Adresseingabe wird JQuery Code verwendet, um bei Zahlungsweise SEPA Lastschrift die Eingabefelder für die Bankverbindung einzublenden. Damit jQuery am Schluss der Seite geladen werden kann und der Code dennoch ausgeführt wird, wird er mit `rex::setProperty('js',jscode)` gespeichert. Wenn dieser Code ausgeführt werden soll, ist ein `<?= rex::getProperty('js',''); ?>` vor dem schließenden `</body>`-Tag zu setzen.
+Die Templates benötigen nur geringe Anpassungen. Im Standardmodul für die Adresseingabe wird JQuery Code verwendet, um bei Zahlungsweise SEPA Lastschrift die Eingabefelder für die Bankverbindung einzublenden. Damit jQuery am Schluss der Seite geladen werden kann und der Code dennoch ausgeführt wird, wird er mit `rex::setProperty('js',$jscode)` gespeichert. Wenn dieser Code ausgeführt werden soll, ist ein `<?= rex::getProperty('js',''); ?>` vor dem schließenden `</body>`-Tag zu setzen.
 
 Mustertemplates sind in Vorbereitung.
+
+## Einen Shop als neue REDAXO Installation - ein Beispiel
+
+### Benötigte AddOns
+
+- yform
+- yrewrite
+- sprog
+
+### Zusätzlich sinnvolle AddOns
+
+- Blöcks
+- Quicknavigation
+- TinyMCE
+- Developer
+- Theme
+
+*Schritt 1*
+REDAXO Basis Installation auf neuer Domain/Subdomain oder lokaler Entwicklungsumgebung
+
+*Schritt 2*
+Über den Installer die oben benötigten AddOns herunterladen und installieren.
+
+*Schritt 3*
+Über Github das AddOn Url2 Version 3 beta herunterladen und installieren.
+Über Github das AddOn warehouse herunterladen und installieren.
+
+*Schritt 4*
+Minimal Beispielimport Datenbank und Dateien installieren. Die Beispieldateien liegen dem AddOn im Verzeichnis `install/demo` bei.
+
+*Schritt 5*
+PHP Mailer konfigurieren.
+Für Paypal Bestellungen in Warehouse Paypal Parameter ergänzen.
+
+*Bekannte Fehler*
+In der obigen Konfiguration kann die Bestelltabelle nicht aufgerufen werden. Hierfür muss zusätzlich die ycom installiert werden und in der ycom Usertabelle das Feld company angelegt werden.
+Die Bilder in der Demo sind absichtlich verkleinert.
+
+## Credits
+
+Yakamara, Jan Kristinus, Thomas Blum, Gregor Harlan.
+Thomas Skerbis, Daniel Weitenauer, Oliver Kreischer und viele mehr.
