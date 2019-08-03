@@ -1,5 +1,5 @@
 <?php
-
+// dump($this->items[0]);
 ?>
 <div class="uk-grid-margin uk-first-column">
     <div class="uk-grid-medium uk-grid" uk-grid="">
