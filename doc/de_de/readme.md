@@ -155,7 +155,21 @@ Das Beispielfragment wh_scheme_article_with_variants gibt strukturierte Daten au
 
 Die Templates benötigen nur geringe Anpassungen. Im Standardmodul für die Adresseingabe wird JQuery Code verwendet, um bei Zahlungsweise SEPA Lastschrift die Eingabefelder für die Bankverbindung einzublenden. Damit jQuery am Schluss der Seite geladen werden kann und der Code dennoch ausgeführt wird, wird er mit `rex::setProperty('js',$jscode)` gespeichert. Wenn dieser Code ausgeführt werden soll, ist ein `<?= rex::getProperty('js',''); ?>` vor dem schließenden `</body>`-Tag zu setzen.
 
-Mustertemplates sind in Vorbereitung.
+Mustertemplates sind in der Beispielinstallation enthalten.
+
+## E-Mail Templates
+
+Die E-Mail Templates aus der Grundinstallation müssen noch für eigene Zwecke angepasst werden. Um bei einer Auswahl der Zahlungsweise _Vorauskasse_ einen Text im E-Mail Template auszugeben, kann folgender Code verwendet werden:
+
+```
+<?php if (REX_YFORM_DATA[field="payment_type"] == "prepayment") : ?>
+Bitte überweisen Sie den Betrag auf das Konto
+Wolfgang Bund
+IBAN: DE19 6835 0048 0001 7140 21
+BIC: SKLODE66XXX
+<?php endif ?>
+```
+
 
 ## Einen Shop als neue REDAXO Installation - ein Beispiel
 

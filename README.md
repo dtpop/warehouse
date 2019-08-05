@@ -16,6 +16,41 @@ Eine Livevorschau kann man hier anschauen: https://warehouse.ferien-am-tressower
 
 Von diesem Liveshop sind Demodaten im AddOn enthalten. Sowohl Files als auch Datenbank können aus dem Verzeichnis install/demo in REDAXO importiert werden. Achtung! Vorhandene Inhalte, Templates und Module werden dabei gelöscht.
 
-Weitere Hilfe und Installationsanleitung im AddOn.
+## Installation der Demo
+
+### Benötigte AddOns
+
+- yform
+- yrewrite
+- sprog
+
+### Zusätzlich sinnvolle AddOns
+
+- Blöcks
+- Quicknavigation
+- TinyMCE
+- Developer
+- Theme
+
+#### Schritt 1
+REDAXO Basis Installation auf neuer Domain/Subdomain oder lokaler Entwicklungsumgebung
+
+#### Schritt 2
+Über den Installer die oben benötigten AddOns herunterladen und installieren.
+
+#### Schritt 3
+Über Github das AddOn Url2 mindestens Version 3 beta herunterladen und installieren.
+Über Github das AddOn warehouse herunterladen und installieren.
+
+#### Schritt 4
+Minimal Beispielimport Datenbank und Dateien installieren. Die Beispieldateien liegen dem AddOn im Verzeichnis `install/demo` bei.
+
+#### Schritt 5
+PHP Mailer konfigurieren.
+Für Paypal Bestellungen in Warehouse Paypal Parameter ergänzen.
+
+#### Bekannte Fehler
+In der obigen Konfiguration kann die Bestelltabelle nicht aufgerufen werden. Hierfür muss zusätzlich die ycom installiert werden und in der ycom Usertabelle das Feld company angelegt werden.
+Die Bilder in der Demo sind absichtlich verkleinert.
 
 Use at your own risk. Issues gerne auf Github https://github.com/dtpop/warehouse packen.
