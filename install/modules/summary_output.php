@@ -4,6 +4,7 @@
 
 if (rex::isBackend()) {
     echo '<h2>Bestellung Zusammenfassung</h2>';
+    return;
 } else {
     $wh_userdata = warehouse::get_user_data();
     $cart = warehouse::get_cart();
