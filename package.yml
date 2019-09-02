@@ -17,5 +17,5 @@ requires:
     packages:
         structure: '^2.0'
         yform/manager: '>3'
-        url: '>2'
+
         

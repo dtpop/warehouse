@@ -5,7 +5,14 @@ class warehouse {
     static $fields = [
         'firstname', 'lastname', 'birthdate', 'company', 'department', 'address', 'zip', 'city', 'country', 'email', 'phone',
         'to_firstname', 'to_lastname', 'to_company', 'to_department', 'to_address', 'to_zip', 'to_city', 'to_country',
-        'separate_delivery_address', 'payment_type', 'note', 'iban', 'bic', 'direct_debit_name'
+        'separate_delivery_address', 'payment_type', 'note', 'iban', 'bic', 'direct_debit_name', 'giropay_bic'
+    ];
+    
+    static $age_checked_values = [
+        'giropay_4020',
+        'postident',
+        'known',
+        'other'
     ];
 
     public static function ensure_userdata_fields ($user_data) {
@@ -14,7 +21,7 @@ class warehouse {
                 $user_data[$field] = '';
             }            
         }
-        if (rex_addon::get('ycom')->isAvailable()) {
+        if (rex_plugin::get('ycom','auth')->isAvailable()) {
             $ycom_user = rex_ycom_auth::getUser();
             if ($ycom_user) {
                 $ycom_userdata = $ycom_user->getData();
@@ -27,6 +34,7 @@ class warehouse {
                         $user_data[$k] = $ycom_userdata[$k];
                     }
                 }
+                $user_data['ycom_userid'] = $ycom_user->getId();
     //            dump($ycom_user->getData());
             }
         }
@@ -346,7 +354,11 @@ class warehouse {
         self::save_order_to_db(0);
     }
 
-    public static function save_order_to_db($paypal_id = '') {
+    /**
+     * 
+     * @param type $paypal_id
+     */
+    public static function save_order_to_db($payment_id = '') {
         $cart = self::get_cart();
         foreach ($cart as $k=>$v) {
             unset($v['attributes']);
@@ -365,7 +377,9 @@ class warehouse {
 //        $sql->setDebug();
         $values = [
             'order_total' => $total,
-            'paypal_id' => $paypal_id,
+            'payment_id' => $payment_id,
+            'session_id' => session_id(),
+            'payment_type' => $user_data['payment_type'],
             'order_json' => json_encode([
                 'cart' => $cart,
                 'user_data' => $user_data
@@ -390,6 +404,7 @@ class warehouse {
         $sql->setTable(rex::getTable('wh_orders'));
         $sql->setValues($values);
         $sql->insert();
+        return $sql->getLastId();
     }
 
     public static function get_order_text() {
@@ -499,18 +514,41 @@ class warehouse {
 
     /**
      * Funktion wird aus wh_paypal->execute_payment aufgerufen, wenn die Zahlung abgeschlossen ist.
-     * Kann nur einmal ausgeführt werden (wenn paypal_confirm noch leer ist).
+     * Kann nur einmal ausgeführt werden (wenn payment_confirm noch leer ist).
      * 
      */
     public static function paypal_approved($payment) {
         $sql = rex_sql::factory()->setTable(rex::getTable('wh_orders'))
-                ->setWhere('paypal_id = :paypal_id', ['paypal_id' => $payment->id])
-                ->setWhere('paypal_confirm = :empty', ['empty' => ''])
+                ->setWhere('payment_id = :payment_id', ['payment_id' => $payment->id])
+                ->setWhere('payment_confirm = :empty', ['empty' => ''])
         ;
-        $sql->setValue('paypal_confirm', date('Y-m-d H:i:s'));
+        $sql->setValue('payment_confirm', date('Y-m-d H:i:s'));
         $sql->update();
         // db
         // $payment->id = paypalId
+    }
+
+    /**
+     * Funktion wird aus wh_giropay->check_response aufgerufen, wenn die Zahlung abgeschlossen ist.
+     * Kann nur einmal ausgeführt werden (wenn paypal_confirm noch leer ist).
+     * 
+     */
+    public static function giropay_approved($payment_id,$age_check=0) {
+        $sql = rex_sql::factory()->setTable(rex::getTable('wh_orders'))
+                ->setWhere('payment_id = :payment_id', ['payment_id' => $payment_id])
+                ->setWhere('paypal_confirm = :empty', ['empty' => ''])
+                ->setWhere('payment_type = :payment_type', ['payment_type' => 'giropay'])
+        ;
+        $sql->setValue('payment_confirm', date('Y-m-d H:i:s'));
+        $sql->setValue('agecheck', !$age_check ?: 'giropay_'.$age_check);
+        $sql->update();
+        
+        // ycom_user Datensatz updaten
+        if (rex_plugin::get('ycom','auth')->isAvailable() && rex_ycom_auth::getUser()) {
+            $user = rex_yform_manager_dataset::get(rex_ycom_auth::getUser()->getValue('id'), rex::getTable('ycom_user')); 
+            $user->agecheck = 'giropay_'.$age_check;
+            $user->save();
+        }
     }
 
     public static function get_items_count_in_basket() {
@@ -531,12 +569,13 @@ class warehouse {
      * @param type $params
      */
     public static function save_userdata_in_session($params) {
-        $value_pool = $params->params['value_pool']['sql'];
+        $value_pool = $params->params['value_pool']['email'];
         foreach (self::$fields as $field) {
             if (in_array('to_'.$field,self::$fields)) {
                 $value_pool['to_' . $field] = $value_pool['to_' . $field] ?: $value_pool[$field];
             }
         }
+        
         rex_set_session('user_data', $value_pool);
     }
     
@@ -587,6 +626,50 @@ class warehouse {
             return $payment_key;
         }
     }
+    
+    
+    public static function get_available_payment_types () {
+        $current_payment_types = [
+            'Vorauskasse'=>'prepayment',
+            'SEPA Lastschrift'=>'direct_debit',
+            'Paypal'=>'paypal',
+            'Giropay (Alterscheck)'=>'giropay'
+        ];
+        
+        // Wenn ein 
+        if (rex_plugin::get('ycom','auth')->isAvailable() && rex_ycom_auth::getUser()) {
+            $user = rex_yform_manager_dataset::get(rex_ycom_auth::getUser()->getValue('id'), rex::getTable('ycom_user')); 
+            if (in_array($user->agecheck,self::$age_checked_values)) {
+                return $current_payment_types;
+            }
+        }
+        
+
+        if (rex_config::get('warehouse','agecheck')) {
+            $current_payment_types = [
+                'Giropay (Alterscheck)'=>'giropay'
+            ];    
+        }
+        return $current_payment_types;
+        
+    }
+    
+    
+    /**
+     * Versucht den Warenkorb bei fehlgeschlagenem Giropay wieder zu laden
+     * @param type $reference
+     * 
+     */
+    /*
+    public static function giropay_not_approved ($reference) {
+        $order = rex_yform_manager_dataset::queryOne('SELECT session_id FROM '.rex::getTable('wh_orders').' WHERE payment_id = :payment_id AND payment_type = :payment_type',['payment_id'=>$reference,'payment_type'=>'giropay']);
+        dump($order);
+        exit;
+        
+    }
+     * 
+     */
+    
 
 
 }
