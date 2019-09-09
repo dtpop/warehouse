@@ -48,18 +48,20 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
                 $n['note'] = $attr['notice'];
                 
                 // SELECT Feld - derzeit nur multiple - kein single
-                if ($attr['type'] == 'SELECT') {                    
+                if ($attr['type'] == 'SELECT') {
+//                    dump($attr);
+//                    dump($values[$i]);
                     $sel = new rex_select();
                     $sel->setId('widget_attributes_'.$i);
                     $sel->setName($name."[$i][]");
 //                    $sel->setSize(1);
                     $sel->setAttribute('class', 'form-control selectpicker');
                     $sel->setMultiple();
-                    $sel->setSelected($values[$i]);
                     foreach (explode('|',$attr['values']) as $v) {
                         $_v = explode('=',$v);
                         $sel->addOption($_v[0], isset($_v[1]) ? $_v[1] : $_v[0]);
                     }
+                    $sel->setSelected($values[$i]);
                     $n['field'] = $sel->get();
                 } elseif ($attr['type'] == 'WIDGET') {
                 // WIDGET 
@@ -274,23 +276,29 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
     private function load_values() {
         $main_id = $this->params['main_id'];
         $attributes_for_article = $this->get_attributes_for_article();
-        $attribute_value_table = $this->elements['table_attributevalues'];
+        $attribute_value_table = $this->elements['table_attributevalues'];        
         $qry = "SELECT * FROM $attribute_value_table WHERE article_id = :article_id";
-        $res = rex_sql::factory()
+        $attr_types = rex_sql::factory()
 //                ->setDebug()
                 ->getArray($qry,['article_id'=>$main_id]);
         $values = [];
         foreach ($attributes_for_article as $k=>$attr) {
             if ($attr['type'] == 'SELECT') {
-                $values[$k] = explode(',',$res[$k]['value']);
+                foreach ($attr_types as $v) {
+                    if ($v['attribute_id'] == $attr['id']) {
+                        $values[$k] = explode(',',$v['value']);
+//                        $values[$k][] = $v;
+                    }
+                }                
+                
             } elseif ($attr['type'] == 'WIDGET') {
-                foreach ($res as $v) {
+                foreach ($attr_types as $v) {
                     if ($v['attribute_id'] == $attr['id']) {
                         $values[$k][] = $v;
                     }
                 }                
             } else {
-                $values[$k] = $res[$k]['value'];
+                $values[$k] = $attr_types[$k]['value'];
             }
         }
         $this->setValue($values);

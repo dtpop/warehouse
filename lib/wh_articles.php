@@ -156,7 +156,16 @@ class wh_articles extends \rex_yform_manager_dataset {
         
     }
     
+    /**
+     * 
+     * @param type $article
+     * @param array/string $attr_ids
+     * @return type
+     */
     public static function get_selected_attributes($article, $attr_ids) {
+        if (is_array($attr_ids)) {
+            $attr_ids = implode(',',$attr_ids);
+        }
         $clang = rex_clang::getCurrentId();
         $data = self::query(rex::getTable('wh_attribute_values'))
             ->alias('av')
@@ -166,12 +175,13 @@ class wh_articles extends \rex_yform_manager_dataset {
             ->select('at.type', 'at_type')
             ->select('at.orderable', 'at_orderable')
             ->select('at.whattrid', 'at_whattrid')
-            ->whereRaw('FIND_IN_SET (value, "'.implode(',',$attr_ids).'")')
+            ->whereRaw('FIND_IN_SET (value, "'.$attr_ids.'")')
             ->where('av.article_id', $article->id)
             ->orderBy('at.prio')
             ->orderBy('av.prio')
-            ->find();
-        return $data;        
+            ;
+//        dump($data->getQuery()); exit;
+        return $data->find();
     }
 
     public static function get_attributes_for_article($article) {
@@ -216,6 +226,20 @@ class wh_articles extends \rex_yform_manager_dataset {
         }
         
         return $outdata;
+    }
+    
+    public static function attr_to_array($values) {
+        $a1 = explode('|',$values);
+        $out = [];
+        foreach ($a1 as $v) {
+            $a2 = explode('=',$v);
+            if (isset($a2[1])) {
+                $out[$a2[1]] = $a2[0];
+            } else {
+                $out[$a2[0]] = $a2[0];                
+            }
+        }
+        return $out;
     }
 
 }

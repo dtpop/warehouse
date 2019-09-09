@@ -150,12 +150,20 @@ $field->setLabel('Giropay Startseite');
 $field->setNotice('<code>rex_config::get("warehouse","giropay_page_start")</code>');
 
 $field = $form->addLinkmapField('giropay_page_notify');
-$field->setLabel('Giropay Antwortseite');
-$field->setNotice('<code>rex_config::get("warehouse","giropay_page_notify")</code>');
+$field->setLabel('Giropay Notify Seite');
+$field->setNotice('<code>rex_config::get("warehouse","giropay_page_notify")</code> - Seite, die der Girocheckout Server aufruft. Wird nicht im Browser aufgerufen!');
+
+$field = $form->addLinkmapField('giropay_page_redirect');
+$field->setLabel('Giropay Redirect Seite');
+$field->setNotice('<code>rex_config::get("warehouse","giropay_page_redirect")</code> - Seite, auf die nach Abschluss der Zahlung weitergeleitet wird.');
 
 $field = $form->addLinkmapField('giropay_page_error');
 $field->setLabel('Giropay Fehler');
 $field->setNotice('<code>rex_config::get("warehouse","giropay_page_error")</code>');
+
+$field = $form->addLinkmapField('giropay_page_success');
+$field->setLabel('Giropay Zahlung erfolgreich');
+$field->setNotice('<code>rex_config::get("warehouse","giropay_page_success")</code>');
 
 
 
