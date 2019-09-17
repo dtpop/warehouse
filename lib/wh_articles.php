@@ -156,18 +156,11 @@ class wh_articles extends \rex_yform_manager_dataset {
         
     }
     
-    /**
-     * 
-     * @param type $article
-     * @param array/string $attr_ids
-     * @return type
-     */
     public static function get_selected_attributes($article, $attr_ids) {
-        if (is_array($attr_ids)) {
-            $attr_ids = implode(',',$attr_ids);
-        }
+        // wenn in der attr_id ## vorkommen, sind sie aus einem Select und müssen erst entschlüsselt werden.
+        // 1. Wert ist wh_attributes.id, 2. Wert der Value
         $clang = rex_clang::getCurrentId();
-        $data = self::query(rex::getTable('wh_attribute_values'))
+        $widget_data = self::query(rex::getTable('wh_attribute_values'))
             ->alias('av')
             ->leftJoin('rex_wh_attributes', 'at', 'av.attribute_id', 'at.id')
             ->select('at.name_' . $clang, 'at_name')
@@ -175,14 +168,43 @@ class wh_articles extends \rex_yform_manager_dataset {
             ->select('at.type', 'at_type')
             ->select('at.orderable', 'at_orderable')
             ->select('at.whattrid', 'at_whattrid')
-            ->whereRaw('FIND_IN_SET (value, "'.$attr_ids.'")')
+            ->whereRaw('FIND_IN_SET (value, "'.implode(',',$attr_ids).'")')
             ->where('av.article_id', $article->id)
             ->orderBy('at.prio')
             ->orderBy('av.prio')
-            ;
-//        dump($data->getQuery()); exit;
-        return $data->find();
+            ->find();
+        $select_data = self::select_selected_attributes($attr_ids);
+        return [$widget_data,$select_data];
     }
+    
+    
+    public static function select_selected_attributes ($attr_ids) {
+        // wenn in der attr_id ~~ vorkommen, sind sie aus einem Select und müssen erst entschlüsselt werden.
+        // 1. Wert ist wh_attributes.id, 2. Wert der Value
+        $result = [];
+        foreach ($attr_ids as $k=>$attr_id) {
+            // unpassende rauswerfen
+            if (strpos($attr_id,'~') === false) {
+                continue;
+            }
+            list($main_id,$attr_val) = explode('~~',$attr_id);
+            $result[] = self::get_attribute($main_id,$attr_val);
+        }
+        return $result;        
+    }
+    
+    public static function get_attribute($id,$attr_val) {
+        $at = self::query(rex::getTable('wh_attributes'))
+            ->where('id', $id)
+            ->findOne()
+            ;
+        $values = self::attr_to_array($at->values);
+        $at->value = $values[$attr_val];
+        $at->attr_id = $attr_val;
+        return $at;        
+    }
+    
+    
 
     public static function get_attributes_for_article($article) {
 //        dump($article->id); exit;
@@ -241,5 +263,6 @@ class wh_articles extends \rex_yform_manager_dataset {
         }
         return $out;
     }
+    
 
 }

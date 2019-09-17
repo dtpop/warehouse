@@ -13,7 +13,15 @@ $user_data = $this->wh_userdata;
     <?php foreach ($this->cart as $item) : ?>
         <tr>
             <td>
-                <?= html_entity_decode($item['name']) ?><br>
+                <?= trim(html_entity_decode($item['name']),' -') ?><br>
+                <?php $attr_text = []; ?>
+                <?php foreach ($item['attributes'] as $attr) : ?>
+                    <?php $attr_text[] = $attr['value'] ?>
+                <?php endforeach ?>
+                <?= implode(' - ',$attr_text). ($attr_text ? '<br>' : '') ?>
+                
+                
+                
                 <?= $item['count'] ?> x à <?= number_format($item['price'], 2) ?>
             </td>
             <td class="uk-text-right"><?= number_format($item['total'], 2) ?></td>

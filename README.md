@@ -6,7 +6,6 @@ Das Warehouse stellt Basisfunktionalitäten für einen Webshop in REDAXO zur Ver
 * ein flexible Produktdatenbank auf yform Basis für Kategorien, beliebig viele Unterkategorien, Artikel, Varianten und Attribute
 * einen Warenkorb
 * einen Bestellprozess inkl. PayPal SDK
-* giropay Zahlungsschnittstelle mit Altersverifikation
 
 Die Ausgabe basiert auf Fragmenten, sodass der Shop sich in jede Umgebung einfügen lässt.
 Über das AddOn ycom ist eine Benutzerverwaltung möglich.
@@ -44,7 +43,7 @@ REDAXO Basis Installation auf neuer Domain/Subdomain oder lokaler Entwicklungsum
 Über Github das AddOn warehouse herunterladen und installieren.
 
 #### Schritt 4
-Minimal Beispielimport Datenbank und Dateien installieren. Die Beispieldateien liegen dem AddOn im Verzeichnis `install/demo` bei. - (funktioniert momentan NICHT!)
+Minimal Beispielimport Datenbank und Dateien installieren. Die Beispieldateien liegen dem AddOn im Verzeichnis `install/demo` bei.
 
 #### Schritt 5
 PHP Mailer konfigurieren.
@@ -53,9 +52,5 @@ Für Paypal Bestellungen in Warehouse Paypal Parameter ergänzen.
 #### Bekannte Fehler
 In der obigen Konfiguration kann die Bestelltabelle nicht aufgerufen werden. Hierfür muss zusätzlich die ycom installiert werden und in der ycom Usertabelle das Feld company angelegt werden.
 Die Bilder in der Demo sind absichtlich verkleinert.
-
-## ycom - Benutzerverwaltung
-
-Die Benutzerverwaltung wird über das AddOn ycom (Community) realisiert. Wenn die Community verwendet werden soll, so ist es empfehlenswert zunächst die das AddOn ycom zu installieren und anschließend das AddOn warehouse. Bei der Installation des warehouse wird geprüft, ob ycom vorhanden ist. Ist dies der Fall, werden zusätzliche Felder in der ycom Usertabelle angelegt. Hinweis: Diese Felder stehen zunächst nicht für die Bearbeitung zur Verfügung. Wenn die Bearbeitung im REDAXO Backend über die Community gewünscht wird, so müssen diese Felder noch über yform in definiert werden.
 
 Use at your own risk. Issues gerne auf Github https://github.com/dtpop/warehouse packen.

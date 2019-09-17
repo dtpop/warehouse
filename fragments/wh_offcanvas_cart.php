@@ -8,7 +8,7 @@
         </div>
     </header>
     
-
+    <?php dump($this->cart); ?>
     <?php if ($this->cart) :  // ==== Warenkorb ====  ?>
         <div class="uk-card-body uk-overflow-auto">
             <ul class="uk-list uk-list-divider">
@@ -27,7 +27,14 @@
                                     </div>
                                 </div>
                                 <div class="uk-width-expand">
-                                    <div class="uk-text-meta uk-text-xsmall"><?= $item['cat_name'] ?></div><a class="uk-link-heading uk-text-small" href="<?= rex_getUrl('', '', ['wh_art_id' => $base_id]) ?>"><?= $item['name'] ?></a>
+                                    <div class="uk-text-meta uk-text-xsmall"><?= $item['cat_name'] ?></div>
+                                    <a class="uk-link-heading uk-text-small" href="<?= rex_getUrl('', '', ['wh_art_id' => $base_id]) ?>"><?= trim($item['name'],'- ') ?>
+                                    <?php $attr_text = []; ?>
+                                    <?php foreach ($item['attributes'] as $attr) : ?>
+                                        <?php $attr_text[] = $attr['value'] ?>
+                                    <?php endforeach ?>
+                                    <?= implode(' - ',$attr_text) ?> 
+                                    </a>
                                     <div class="uk-margin-xsmall uk-grid-small uk-flex-middle" uk-grid>
                                         <div class="uk-text-bolder uk-text-small"><?= rex_config::get('warehouse', 'currency_symbol') ?>&nbsp;<?= number_format($item['total'], 2) ?></div>
                                         <div class="uk-text-meta uk-text-xsmall"><?= $item['count'] ?> &times; <?= rex_config::get('warehouse', 'currency_symbol') ?>&nbsp;<?= number_format($item['price'], 2) ?></div>

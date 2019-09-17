@@ -3,16 +3,16 @@
   https://chekromul.github.io/uikit-ecommerce-template
  *   */
 ?>
-<div class="uk-grid-margin uk-first-column">
+<div class="uk-grid-margin">
     <div class="uk-grid-medium uk-grid" uk-grid="">
-        <div class="uk-width-1-1 uk-width-expand@m uk-first-column">
+        <div class="uk-width-1-1 uk-width-expand@m">
             <div class="uk-card uk-card-default uk-card-small tm-ignore-container">
                 <header class="uk-card-header uk-text-uppercase uk-text-muted uk-text-center uk-text-small uk-visible@m">
                     <div class="uk-grid-small uk-child-width-1-2 uk-grid" uk-grid="">
-                        <div class="uk-first-column">Artikel</div>
+                        <div>Artikel</div>
                         <div>
                             <div class="uk-grid-small uk-child-width-expand uk-grid" uk-grid="">
-                                <div class="uk-first-column">Preis</div>
+                                <div>Preis</div>
                                 <div class="tm-quantity-column">Menge</div>
                                 <div>Summe</div>
                                 <div class="uk-width-auto">
@@ -29,9 +29,9 @@
                 <div class="uk-card-body">
                     <div class="uk-grid-small uk-child-width-1-1 uk-child-width-1-2@m uk-flex-middle uk-grid" uk-grid="">
                         <!-- Product cell-->
-                        <div class="uk-first-column">
+                        <div>
                             <div class="uk-grid-small uk-grid" uk-grid="">
-                                <div class="uk-width-1-1 uk-width-1-3@s uk-first-column">
+                                <div class="uk-width-1-1 uk-width-1-3@s">
                                     <?php if ($item['image']) : ?>
                                         <a class="tm-media-box" href="<?= rex_getUrl('','',['wh_art_id'=>$base_id]) ?>">
                                             <figure class="tm-media-box-wrap"><img src="/images/products/<?= $item['image'] ?>" alt="<?= $item['name'] ?>"></figure>
@@ -40,14 +40,20 @@
                                 </div>
                                 <div class="uk-width-expand">
                                     <div class="uk-text-meta"><?= $item['cat_name'] ?></div>
-                                    <a class="uk-link-heading" href="<?= rex_getUrl('','',['wh_art_id'=>$base_id]) ?>"><?= html_entity_decode($item['name']) ?></a>
+                                    <a class="uk-link-heading" href="<?= rex_getUrl('','',['wh_art_id'=>$base_id]) ?>"><?= html_entity_decode($item['name']) ?>
+                                    <?php $attr_text = []; ?>
+                                    <?php foreach ($item['attributes'] as $attr) : ?>
+                                        <?php $attr_text[] = $attr['value'] ?>
+                                    <?php endforeach ?>
+                                    <?= implode(' - ',$attr_text) ?>                                    
+                                    </a>
                                 </div>
                             </div>
                         </div>
                         <!-- Other cells-->
                         <div>
                             <div class="uk-grid-small uk-child-width-1-1 uk-child-width-expand@s uk-text-center uk-grid" uk-grid="">
-                                <div class="uk-first-column">
+                                <div>
                                     <div class="uk-text-muted uk-hidden@m">{{ Price }}</div>
                                     <div><?= rex_config::get('warehouse','currency_symbol').'&nbsp;'.number_format($item['price'],2) ?></div>                        
                                 </div>

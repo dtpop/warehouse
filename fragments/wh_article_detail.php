@@ -83,6 +83,58 @@ $wh_prop = rex::getProperty('wh_prop');
                             </div>
                         </div>
                     <?php endif ?>
+                    
+                        <?php foreach ($this->attributes as $attr) : ?>
+                            <?php if ($attr['attr']['orderable']) : // ==== Attribute ?>
+                                <div class="uk-margin">
+                                    <div class="uk-grid-medium uk-grid" uk-grid="">
+                                        <div>
+                                            <p><?= $attr['attr']['name_1'] ?></p>
+                                            <?php if ($attr['attr']['multiple'] == 1) : ?>
+                                            
+                                                <div class="wh-attributes">
+                                                    <?php foreach ($attr['data'] as $_attr) : ?>
+                                                        <?php if (!$_attr->label) continue ?>
+                                                        <button type="button" id="multiple_attr_<?= $_attr->value ?>" class="uk-button uk-margin-small-bottom uk-margin-small-right" uk-toggle="target: #multiple_attr_<?= $_attr->value ?>; cls: uk-card-primary" data-price="<?= $_attr->price ?>" data-attr_id="<?= $_attr->value ?>">
+                                                            <?= $_attr->label ?>
+                                                        </button>
+                                                    <?php endforeach ?>
+                                                </div>
+                                            <?php else : ?>
+                                                <?php if ($attr['attr']['type'] == 'SELECT') :  // SELECT erstmal nicht berücksichtigen ?>
+                                                    <?php foreach ($attr['data'] as $_attr) : ?>
+                                                        <?php $art_attributes = $_attr->getData() ?>
+                                                        <?php $all_attributes = wh_articles::attr_to_array($attr['attr']['values']); ?>
+                                                        <?php // dump($_attr['attr']['values']); ?>
+                                                        <?php // dump($all_attributes); ?>
+                                                        <?php // dump($art_attributes); ?>
+                                                        <ul class="tm-variations wh-attributes uk-list">
+                                                            <?php foreach (explode(',',$art_attributes['value']) as $k=>$attr_val) : ?>
+                                                                <li class="uk-display-inline-block label label-info<?= $k ? '' : ' uk-active' ?>">
+                                                                    <a class="uk-button uk-button-primary" data-price="0" data-art_id="<?= $this->article->get_art_id() ?>" data-attr_id="<?= trim($attr['attr']['id'].'~~'.$attr_val,'~') ?>"><?= $all_attributes[$attr_val] ?></a>
+                                                                </li>
+                                                            <?php endforeach ?>
+                                                        </ul>                                            
+                                                    <?php endforeach ?>
+                                                <?php elseif ($attr['attr']['type'] == 'WIDGET') : ?>
+                                                    <ul class="tm-variations wh-attributes uk-list">
+                                                        <?php $start = 1 ?>
+                                                        <?php foreach ($attr['data'] as $k=>$_attr) : ?>
+                                                            <?php if (!$_attr->available) continue ?>
+                                                            <li class="uk-display-inline-block label label-info<?= $start ? ' uk-active' : '' ?>">
+                                                                <a class="uk-button uk-button-primary" data-price="<?= $_attr->price ?: '0' ?>" data-attr_id="<?= $_attr->value ?>"><?= $_attr->label ?></a>
+                                                            </li>
+                                                            <?php // dump($_attr); ?>
+                                                            <?php $start = 0 ?>
+                                                        <?php endforeach ?>
+                                                    </ul>                                            
+                                                <?php endif ?>                                            
+                                            <?php endif ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif ?>
+                        <?php endforeach ?>                    
 
                     <div class="uk-grid-small uk-child-width-1-1" uk-grid>
                         <div>

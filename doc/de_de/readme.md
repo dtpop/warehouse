@@ -61,6 +61,26 @@ Es genügt ein einziges Template, welches den Artikel mit `REX_ARTICLE[]` ausgib
 
 ## Fragmente
 
+## Varianten
+
+Varianten können sowohl eigenständige Artikel sein, die sich ein Merkmal (z.B. einen Beschreibungstext, ein Bild, weitere Merkmale) teilen. Sie können aber genauso als eigentständige Artikel behandelt und angezeigt werden.
+Wenn ein Artikel als Variantenartikel angelegt ist, so wird er auch stets als Variantenartikel behandelt. Wenn der Hauptartikel ohne Variante bestellbar ist, so muss also eine Hauptvariante angelegt werden.
+
+## Attribute
+
+Attribute sind dazu gedacht den Artikeln eine oder mehrere Eigenschafte zuweisen zu können (Größen bei Schuhen oder Kleider, Farben etc.) Die Attribute können zu Gruppen zusammengefasst werden. Ein Artikel, dem eine Attributgruppe zugewiesen wird, erhält dann die einzelnen Attribute der Attributgruppe. Die für den jeweiligen Artikel verfügbaren Attribute können dann aus dem Set ausgewählt werden.
+
+### Select
+
+Das Select ist für Attribute gedacht, die keine weiteren Parameter (bestellbar, Preisauf- bzw. -abschlag) haben. Beispielsweise Farben bei T-Shirts. In der Attribute Tabelle werden dann alle verfügbaren Attribute eingetragen. Beim Artikel selbst kann dann ausgewählt werden, welche Attribute für diese speziellen Artikel zur Verfügung stehen. Damit lässt sich beispielsweise eine Vereinheitlichung bei Farbcodierungen realisieren.
+Die für den Artikel verfügbaren Attribute werden nicht als einzelne Datensätze sondern als Set in der Datenbank abgelegt. Daher ist es möglicherweise aufwändiger einen Filter nach Attributen zu realisieren die per Select definiert wurden.
+
+### Widget
+
+Widget ist die richtige Einstellung, wenn Attribute einen Preisauf- bzw. -abschlag enthalten können. Die Attribute können dann individuell beim jeweiligen Artikel konfiguriert werden.
+
+*Hinweis* Bei der Verwendung des Widgets werden jeweils _alle_ Attribute eines Artikels neu in die Tabelle rex_wh_attribute_values geschrieben. Die alten Werte werden jeweils gelöscht. Damit ist es möglich, dass sich die Ids der Datensätze in der Tabelle rex_wh_attribute_values ändern. Die Ids sollten also nicht für eigene Zwecke verwendet werden.
+
 ## Menü erweitern
 
 Manchmal ist es wünschenswert, dass das Hauptmenü der Website auch die Kategorien des Shops anzeigt. Da im Warehouse nur eine REDAXO-Seite für die gesamte Ausgabe der Shopkategorien und Artikel verwendet wird, muss die Hauptnavigation entsprechend erweitert werden. Hierfür stehen verschiedene Komponenten bereit, die entweder komplett oder in Einzelteilen verwendet werden können. Zunächst bringt der Shop eine eigene Navigationsklasse `wh_nav` mit. Diese kann weitestgehend durch Parameter den eigenen Bedürfnissen angepasst werden. Man kann auch die gesamte Klasse nehmen, ins eigene Projekt AddOn packen, die Klasse umbenennen und nach eigenen Bedürfnissen anpassen.

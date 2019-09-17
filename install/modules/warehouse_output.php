@@ -41,7 +41,7 @@ if (rex::isBackend()) {
                 $fragment->setVar('category',$category);
                 $fragment->setVar('path',$wh_prop['path']);
                 echo $fragment->parse('wh_article_with_variants.php');
-//                echo $fragment->parse('wh_scheme_article_with_variants.php');
+                echo $fragment->parse('wh_scheme_article_with_variants.php');
             }
         }
     } else {
