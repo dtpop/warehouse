@@ -8,7 +8,6 @@
         </div>
     </header>
     
-    <?php dump($this->cart); ?>
     <?php if ($this->cart) :  // ==== Warenkorb ====  ?>
         <div class="uk-card-body uk-overflow-auto">
             <ul class="uk-list uk-list-divider">
