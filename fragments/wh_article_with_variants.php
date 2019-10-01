@@ -37,7 +37,7 @@
                         </div>
                         <p class="priceline uk-margin-remove"><?= $item->get_price(true) ?></p>
                         <p class="uk-text-small uk-margin-remove-top">inkl. MwSt. zzgl. <a href="#shipping_modal" uk-toggle>Versandkosten</a></p>                            
-                        <form action="/index.php" method="post">
+                        <form action="/" method="post">
                             <input type="hidden" name="art_id" value="<?= $item->get_art_id() ?>">
                             <input type="hidden" name=action value="add_to_cart">
                             <label for="wh_count_<?= $item->get_art_id() ?>" class="switch_count uk-button uk-button-primary uk-padding-remove" data-value="-1"><span uk-icon="icon: minus;"></span></label><input name="order_count" type="text" class="uk-input uk-inline order_count" id="wh_count_<?= $item->get_art_id() ?>" value="1"><label for="wh_count_<?= $item->get_art_id() ?>" class="uk-button uk-button-primary uk-padding-remove switch_count" data-value="+1"><span uk-icon="icon: plus;"></span></label>

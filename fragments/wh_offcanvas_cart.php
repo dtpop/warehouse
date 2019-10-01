@@ -39,7 +39,7 @@
                                         <div class="uk-text-meta uk-text-xsmall"><?= $item['count'] ?> &times; <?= rex_config::get('warehouse', 'currency_symbol') ?>&nbsp;<?= number_format($item['price'], 2) ?></div>
                                     </div>
                                 </div>
-                                <div><a class="uk-icon-link uk-text-danger uk-invisible-hover" href="/index.php?showcart=1&action=modify_cart&art_uid=<?= $k ?>&mod=del" uk-icon="icon: close; ratio: .75" uk-tooltip="Remove"></a></div>
+                                <div><a class="uk-icon-link uk-text-danger uk-invisible-hover" href="/?showcart=1&action=modify_cart&art_uid=<?= $k ?>&mod=del" uk-icon="icon: close; ratio: .75" uk-tooltip="Remove"></a></div>
                             </div>
                         </article>
                     </li>

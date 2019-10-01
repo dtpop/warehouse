@@ -156,7 +156,7 @@ $wh_prop = rex::getProperty('wh_prop');
                             <div id="wh_art_price" class="tm-product-price" data-price="<?= $this->article->get_price() ?>"><?= $this->article->get_price(true) ?></div>
                         </div>
                         <div>
-                            <form action="/index.php" method="post" id="wh_form_detail">
+                            <form action="/" method="post" id="wh_form_detail">
                                 <input type="hidden" name="art_id" value="<?= $this->article->get_art_id() ?>">
                                 <input type="hidden" name=action value="add_to_cart">
                                 <p class="uk-text-small uk-margin-remove-top">inkl. MwSt. zzgl. <a href="#shipping_modal" uk-toggle>Versandkosten</a></p>

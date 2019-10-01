@@ -58,15 +58,15 @@
                                     <div><?= rex_config::get('warehouse','currency_symbol').'&nbsp;'.number_format($item['price'],2) ?></div>                        
                                 </div>
                                 <div class="wh-cart-quantity-column">
-                                    <a href="/index.php?current_article=<?= rex_article::getCurrentId() ?>&action=modify_cart&art_uid=<?= $uid ?>&mod=-1" uk-icon="icon: minus; ratio: .75" class="uk-icon"></a>
+                                    <a href="/?current_article=<?= rex_article::getCurrentId() ?>&action=modify_cart&art_uid=<?= $uid ?>&mod=-1" uk-icon="icon: minus; ratio: .75" class="uk-icon"></a>
                                     <input class="uk-input wh-qty-input" id="product-1" type="text" maxlength="3" value="<?= $item['count'] ?>" disabled>
-                                    <a href="/index.php?current_article=<?= rex_article::getCurrentId() ?>&action=modify_cart&art_uid=<?= $uid ?>&mod=+1" uk-icon="icon: plus; ratio: .75" class="uk-icon"></a>
+                                    <a href="/?current_article=<?= rex_article::getCurrentId() ?>&action=modify_cart&art_uid=<?= $uid ?>&mod=+1" uk-icon="icon: plus; ratio: .75" class="uk-icon"></a>
                                 </div>
                                 <div>
                                     <div class="uk-text-muted uk-hidden@m">Sum</div>
                                     <div><?= rex_config::get('warehouse','currency_symbol').'&nbsp;'.number_format($item['total'],2) ?></div>                        
                                 </div>
-                                <div class="uk-width-auto@s"><a href="/index.php?current_article=<?= rex_article::getCurrentId() ?>&action=modify_cart&art_uid=<?= $uid ?>&mod=del" class="uk-text-danger" uk-tooltip="Remove" title="" aria-expanded="false"><span uk-icon="close" class="uk-icon"></span></a></div>
+                                <div class="uk-width-auto@s"><a href="/?current_article=<?= rex_article::getCurrentId() ?>&action=modify_cart&art_uid=<?= $uid ?>&mod=del" class="uk-text-danger" uk-tooltip="Remove" title="" aria-expanded="false"><span uk-icon="close" class="uk-icon"></span></a></div>
                             </div>
                         </div>
                     </div>

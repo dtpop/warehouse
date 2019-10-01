@@ -2,7 +2,7 @@
 <p class="error">Sie müssen mindestens bei einem Artikel eine Anzahl wählen.</p>
 <?php endif ?>
 
-<form action="/index.php" method="post">
+<form action="/" method="post">
 <input type="hidden" name="action" value="add_group_to_cart">
 <input type="hidden" name="current_article" value="<?= rex_article::getCurrentId() ?>">
 <?php $check = 0 ?>

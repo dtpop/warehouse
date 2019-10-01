@@ -2,7 +2,7 @@
 
 <?php foreach ($this->items as $item) : ?>
     <div class="article_item">
-        <form action="/index.php" method="post">
+        <form action="/" method="post">
             <input type="hidden" name="art_id" value="<?= $item->get_art_id() ?>">
             <input type="hidden" name=action value="add_to_cart">
         <p><?= $item->get_name() ?></p>
