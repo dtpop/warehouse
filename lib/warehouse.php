@@ -621,10 +621,10 @@ class warehouse {
     
     public static function get_payment_type ($payment_key) {
         $payment_types = [
-            'prepayment'=>'Vorauskasse',
-            'invoice'=>'Rechnung',
-            'paypal'=>'Paypal',
-            'direct_debit'=>'SEPA Lastschrift',
+            'prepayment'=>'{{ payment_type_prepayment }}',
+            'invoice'=>'{{ payment_type_invoice }}',
+            'paypal'=>'{{ payment_type_paypal }}',
+            'direct_debit'=>'{{ payment_type_direct_debit }}',
             ];
         if (isset($payment_types[$payment_key])) {
             return $payment_types[$payment_key];
@@ -636,13 +636,13 @@ class warehouse {
     
     public static function get_available_payment_types () {
         $current_payment_types = [
-            'Vorauskasse'=>'prepayment',
-            'SEPA Lastschrift'=>'direct_debit',
-            'Paypal'=>'paypal',
-            'Giropay (Alterscheck)'=>'giropay'
+            '{{ payment_type_prepayment }}'=>'prepayment',
+            '{{ payment_type_direct_debit }}'=>'direct_debit',
+            '{{ payment_type_paypal }}'=>'paypal',
+            '{{ payment_type_giropay_agecheck }}'=>'giropay'
         ];
         
-        // Wenn ein 
+        // Wenn ein User mit verifiziertem Alter eingeloggt ist, alle Typen zeigen
         if (rex_plugin::get('ycom','auth')->isAvailable() && rex_ycom_auth::getUser()) {
             $user = rex_yform_manager_dataset::get(rex_ycom_auth::getUser()->getValue('id'), rex::getTable('ycom_user')); 
             if (in_array($user->agecheck,self::$age_checked_values)) {
@@ -653,13 +653,12 @@ class warehouse {
 
         if (rex_config::get('warehouse','agecheck')) {
             $current_payment_types = [
-                'Giropay (Alterscheck)'=>'giropay'
+                '{{ payment_type_giropay_agecheck }}'=>'giropay'
             ];    
         }
         return $current_payment_types;
         
-    }
-    
+    }    
     
     /**
      * Versucht den Warenkorb bei fehlgeschlagenem Giropay wieder zu laden
