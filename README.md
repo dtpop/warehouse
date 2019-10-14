@@ -39,7 +39,7 @@ REDAXO Basis Installation auf neuer Domain/Subdomain oder lokaler Entwicklungsum
 Über den Installer die oben benötigten AddOns herunterladen und installieren.
 
 #### Schritt 3
-Über Github das AddOn Url2 mindestens Version 3 beta herunterladen und installieren.
+Über Github das AddOn [Url](https://github.com/tbaddade/redaxo_url) mindestens Version 2.0.0-beta3 herunterladen und installieren.
 Über Github das AddOn warehouse herunterladen und installieren.
 
 #### Schritt 4
