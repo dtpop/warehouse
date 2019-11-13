@@ -24,7 +24,7 @@ class wh_shipping {
                     $sum_pcs += $ci['count'];
                 }
             }
-            if ($shipping = self::check_val($sum_pcs)) {
+            if (($shipping = self::check_val($sum_pcs)) !== false) {
                 return $shipping;
             }
         // Nach Betrag (Brutto)
@@ -46,33 +46,42 @@ class wh_shipping {
      */
     private static function check_val($check_val) {
         $shipping_params = json_decode(rex_config::get('warehouse','shipping_parameters'));
+        $stop = false;
         foreach ($shipping_params as $param) {
             switch ($param[0]) {
                 case '>':
                     if ((int) $check_val > (int) $param[1]) {
                         return $param[2];
+                        $stop = true;
                     }
                     break;
                 case '>=':
                     if ((int) $check_val >= (int) $param[1]) {
                         return $param[2];
+                        $stop = true;
                     }
                     break;
                 case '<':
-                    if ($check_val < $param[1]) {
+                    if ((int) $check_val < (int) $param[1]) {
                         return $param[2];
+                        $stop = true;
                     }
                     break;
                 case '<=':
                     if ($check_val <= $param[1]) {
                         return $param[2];
+                        $stop = true;
                     }
                     break;
                 case '=':
                     if ($check_val == $param[1]) {
                         return $param[2];
+                        $stop = true;
                     }
                     break;
+            }
+            if ($stop) {
+                break;
             }
         }
         return false;        

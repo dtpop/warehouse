@@ -9,5 +9,20 @@ class wh_categories extends \rex_yform_manager_dataset {
         $data = $tree_select->sqlTree($cat, $depth);
         return $data;
     }
+	
+    public static function get_all() {
+        $clang = rex_clang::getCurrentId();
+		$data = self::query()
+				->alias('cat')
+				->select('cat.name_' . $clang, 'cat_name')
+				->select('cat.longtext_' . $clang, 'cat_longtext')
+				->orderBy('cat.prio')
+				->where('cat.status',1)
+				;
+				
+
+        return $data->find();
+    }
+	
 
 }
