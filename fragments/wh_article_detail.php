@@ -122,7 +122,7 @@ $wh_prop = rex::getProperty('wh_prop');
                                                         <?php foreach ($attr['data'] as $k=>$_attr) : ?>
                                                             <?php if (!$_attr->available) continue ?>
                                                             <li class="uk-display-inline-block label label-info<?= $start ? ' uk-active' : '' ?>">
-                                                                <a class="uk-button uk-button-primary" data-price="<?= $_attr->price ?: '0' ?>" data-attr_id="<?= $_attr->value ?>"><?= $_attr->label ?></a>
+                                                                <a class="uk-button uk-button-primary" data-pricemode="<?= $attr['attr']['pricemode'] ?>" data-price="<?= $_attr->price ?: '0' ?>" data-attr_id="<?= $_attr->value ?>"><?= $_attr->label ?></a>
                                                             </li>
                                                             <?php // dump($_attr); ?>
                                                             <?php $start = 0 ?>

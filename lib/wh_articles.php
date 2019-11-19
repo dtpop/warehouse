@@ -236,11 +236,21 @@ class wh_articles extends \rex_yform_manager_dataset {
                 ->select('at.type', 'at_type')
                 ->select('at.orderable', 'at_orderable')
                 ->select('at.whattrid', 'at_whattrid')
+                ->select('at.pricemode', 'at_pricemode')
                 ->where('av.attribute_id', $attr->id)
                 ->where('av.article_id', $article->id)
                 ->orderBy('at.prio')
                 ->orderBy('av.prio')
                 ->find();
+            
+            foreach ($data as $k=>$v) {
+                if ($attr->pricemode == 'absolute') {
+                    $data[$k]->price_absolute = $v->price;
+                } else {
+                    $data[$k]->price_absolute = $article->price + $v->price;                    
+                }
+            }
+            
             $outdata[] = [
                 'attr'=>$attr->getData(),
                 'data'=>$data
@@ -249,6 +259,7 @@ class wh_articles extends \rex_yform_manager_dataset {
         
         return $outdata;
     }
+    
     
     public static function attr_to_array($values) {
         $a1 = explode('|',$values);

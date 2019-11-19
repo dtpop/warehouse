@@ -18,7 +18,11 @@ $(function() {
         }
         $('input.wh_attribute').remove();
         $('.wh-attributes .uk-active a, .wh-attributes .uk-card-primary').each(function() {
-            price = parseFloat(price) + parseFloat($(this).data('price'));
+            if ($(this).data('pricemode') == 'absolute') {
+                price = parseFloat($(this).data('price'));
+            } else {
+                price = parseFloat(price) + parseFloat($(this).data('price'));
+            }
             $('#wh_form_detail').append('<input type="hidden" name="wh_attr[]" value="'+$(this).data('attr_id')+'" class="wh_attribute">');
         });
         
