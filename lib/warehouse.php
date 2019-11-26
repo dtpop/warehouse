@@ -65,6 +65,7 @@ class warehouse {
         list($widget_attributes,$select_attributes) = wh_articles::get_selected_attributes($article, $attr_ids);
 //        dump($widget_attributes);
 //        dump($select_attributes);
+//        exit;
 
         $art = [];
         $art['count'] = rex_request('order_count', 'int') ?: 1;
@@ -93,8 +94,12 @@ class warehouse {
         // Attribute aus WIDGET Elementen
         foreach ($widget_attributes as $attr) {
             $art['attributes'][] = $attr->getData();
-            $art['price'] += $attr->price;
-//            $art['name'] .= ' - ' . $attr->label;
+            if ($attr->at_pricemode == 'absolute') {
+                $art['price'] = $attr->price;                
+            } else {
+                $art['price'] += $attr->price;
+            }
+            $art['name'] .= ' ' . $attr->label;
         }
 
         $cart = self::get_cart();

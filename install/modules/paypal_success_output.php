@@ -38,7 +38,7 @@ if (rex::isBackend()) {
     
     
 //    rex_redirect(rex_config::get('warehouse','thankyou_page'));
-    rex_response::sendRedirect(rex_getUrl(rex_config::get('warehouse','thankyou_page'), '', rex_config::get('warehouse','paypal_getparams') ? json_decode(rex_config::get('warehouse','paypal_getparams') : [],true), '&'));    
+    rex_response::sendRedirect(rex_getUrl(rex_config::get('warehouse','thankyou_page'), '', rex_config::get('warehouse','paypal_getparams') ? json_decode(rex_config::get('warehouse','paypal_getparams')) : [],true), '&');    
     // json_decode(rex_config::get('warehouse','paypal_getparams'),true)
     
 }

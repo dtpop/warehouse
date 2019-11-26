@@ -168,6 +168,7 @@ class wh_articles extends \rex_yform_manager_dataset {
             ->select('at.type', 'at_type')
             ->select('at.orderable', 'at_orderable')
             ->select('at.whattrid', 'at_whattrid')
+            ->select('at.pricemode', 'at_pricemode')
             ->whereRaw('FIND_IN_SET (value, "'.implode(',',$attr_ids).'")')
             ->where('av.article_id', $article->id)
             ->orderBy('at.prio')
