@@ -49,6 +49,7 @@ class wh_articles extends \rex_yform_manager_dataset {
         return $this->var_price ?: $this->price;
     }
 
+    /*
     public function get_price_netto() {
         $brutto_price = $this->get_price();
         $tax = rex_config::get('warehouse', 'tax_value');
@@ -59,6 +60,7 @@ class wh_articles extends \rex_yform_manager_dataset {
     public function get_tax_value() {
         return $this->get_price() - $this->get_price_netto();
     }
+    */
 
     /**
      * Bei Variantenartikeln: articleid__varianteid
@@ -88,36 +90,36 @@ class wh_articles extends \rex_yform_manager_dataset {
         $clang = rex_clang::getCurrentId();
         if ($articles_only) {
             $data = self::query()
-                    ->alias('art')
-                    ->leftJoin('rex_wh_categories', 'cat', 'art.category_id', 'cat.id')
-                    ->select('art.name_' . $clang, 'art_name')
-                    ->select('cat.name_' . $clang, 'cat_name')
-                    ->select('cat.id', 'cat_id')
-                    ->select('art.description_' . $clang, 'art_description')
-                    ->select('art.longtext_' . $clang, 'art_longtext')
-                    ->orderBy('art.prio')
-                    ->where('art.status',1)
+                ->alias('art')
+                ->leftJoin('rex_wh_categories', 'cat', 'art.category_id', 'cat.id')
+                ->select('art.name_' . $clang, 'art_name')
+                ->select('cat.name_' . $clang, 'cat_name')
+                ->select('cat.id', 'cat_id')
+                ->select('art.description_' . $clang, 'art_description')
+                ->select('art.longtext_' . $clang, 'art_longtext')
+                ->orderBy('art.prio')
+                ->where('art.status',1)
             ;
         } else {
             $data = self::query()
-                    ->alias('art')
-                    ->leftJoin('rex_wh_article_variants', 'var', 'art.id', 'var.parent_id')
-                    ->leftJoin('rex_wh_categories', 'cat', 'art.category_id', 'cat.id')
-                    ->select('art.name_' . $clang, 'art_name')
-                    ->select('art.description_' . $clang, 'art_description')
-                    ->select('art.longtext_' . $clang, 'art_longtext')
-                    ->select('var.name_' . $clang, 'var_name')
-                    ->select('var.image', 'var_image')
-                    ->select('var.freeprice', 'var_freeprice')
-                    ->select('var.id', 'var_id')
-                    ->select('var.whvarid', 'var_whvarid')
-                    ->select('var.price', 'var_price')
-                    ->select('var.gallery', 'var_gallery')
-                    ->select('cat.name_' . $clang, 'cat_name')
-                    ->select('cat.id', 'cat_id')
-                    ->orderBy('art.prio')
-                    ->orderBy('var.prio')
-                    ->where('art.status',1)
+                ->alias('art')
+                ->leftJoin('rex_wh_article_variants', 'var', 'art.id', 'var.parent_id')
+                ->leftJoin('rex_wh_categories', 'cat', 'art.category_id', 'cat.id')
+                ->select('art.name_' . $clang, 'art_name')
+                ->select('art.description_' . $clang, 'art_description')
+                ->select('art.longtext_' . $clang, 'art_longtext')
+                ->select('var.name_' . $clang, 'var_name')
+                ->select('var.image', 'var_image')
+                ->select('var.freeprice', 'var_freeprice')
+                ->select('var.id', 'var_id')
+                ->select('var.whvarid', 'var_whvarid')
+                ->select('var.price', 'var_price')
+                ->select('var.gallery', 'var_gallery')
+                ->select('cat.name_' . $clang, 'cat_name')
+                ->select('cat.id', 'cat_id')
+                ->orderBy('art.prio')
+                ->orderBy('var.prio')
+                ->where('art.status',1)
             ;
         }
 

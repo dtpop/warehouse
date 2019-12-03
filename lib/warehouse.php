@@ -345,12 +345,14 @@ class warehouse {
         }
     }
 
+    /*
     public static function get_tax() {
         $sub_total = self::get_sub_total();
         $tax = rex_config::get('warehouse', 'tax_value');
         $tax_value = round(($sub_total / (100 + $tax) * $tax), 2);
         return $tax_value;
     }
+     */
 
     public static function get_cart_netto() {
         return self::get_sub_total_netto();
