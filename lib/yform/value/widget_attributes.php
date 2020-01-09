@@ -71,7 +71,7 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
                     $n['field'] .= '<input type="hidden" name="'.$name."[$i][widgettype]".'" value="WIDGET">';
                     $n['field'] .= '<table class="sortable table table-bordered">';
                     $n['field'] .= '<thead>';
-                    $n['field'] .= '<tr><th>Nr.</th><th>Label</th><th>Mehr-/Minderpreis</th><th>Lieferbar</th><th></th></tr>';
+                    $n['field'] .= '<tr><th>Nr.</th><th>Label</th><th>'.($attr['pricemode'] == 'absolute' ? 'Preis' : 'Mehr-/Minderpreis').'</th><th>Lieferbar</th><th></th></tr>';
                     $n['field'] .= '</thead><tbody>';
                     
                     if (is_array($values[$i])) {
