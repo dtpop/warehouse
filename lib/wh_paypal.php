@@ -76,6 +76,11 @@ class wh_paypal {
         $details->setShipping(warehouse::get_shipping_cost())
                 ->setTax(warehouse::get_tax_total())
                 ->setSubtotal(warehouse::get_sub_total_netto());
+        
+        if (warehouse::get_discount_value()) {
+            $details->setShippingDiscount(warehouse::get_discount_value());
+        }
+        
 
         $amount = new \PayPal\Api\Amount();
         $amount->setTotal(warehouse::get_cart_total())
@@ -207,6 +212,10 @@ class wh_paypal {
         $details->setShipping(warehouse::get_shipping_cost())
                 ->setTax(warehouse::get_tax_total())
                 ->setSubtotal(warehouse::get_sub_total_netto());
+        
+        if (warehouse::get_discount_value()) {
+            $details->setShippingDiscount(warehouse::get_discount_value());
+        }
 
         $amount->setCurrency(rex_config::get('warehouse', 'currency'));
         $amount->setTotal(warehouse::get_cart_total());

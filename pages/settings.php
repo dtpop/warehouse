@@ -42,6 +42,21 @@ $field = $form->addTextField('currency_symbol');
 $field->setLabel('Währungssymbol (z.B. €)');
 $field->setNotice('<code>rex_config::get("warehouse","currency_symbol")</code>');
 
+$field = $form->addTextField('country_codes');
+$field->setLabel('Mögliche Länder für die Lieferung');
+$field->setNotice('Als JSON in der Form <code>{"Deutschland":"DE","Österreich":"AT","Schweiz":"CH"}</code> angeben.<br><code>rex_config::get("warehouse","country_codes")</code>');
+
+$field = $form->addSelectField('cart_mode');
+$field->setLabel('Warenkorb Modus');
+$select = $field->getSelect();
+$select->addOptions([
+    'cart'=>'Warenkorb',
+    'page'=>'Artikelseite'
+]);
+$field->setNotice('Es kann entweder die Warenkorbseite aufgerufen werden oder die vorherige Artikelseite. Wenn die Artikelseite aufgerufen wird, so wird showcart=1 als Get-Parameter angehängt.<br><code>rex_config::get("warehouse","cart_mode")</code>');
+
+$form->addFieldset('Mehrwertsteuer Einstellungen');
+
 $field = $form->addTextField('tax_value');
 $field->setLabel('Steuersatz [%]');
 $field->setNotice('<code>rex_config::get("warehouse","tax_value")</code>');
@@ -62,18 +77,9 @@ $field = $form->addTextField('tax_value_4');
 $field->setLabel('Steuersatz 4 [%]');
 $field->setNotice('<code>rex_config::get("warehouse","tax_value_4")</code>');
 
-$field = $form->addTextField('country_codes');
-$field->setLabel('Mögliche Länder für die Lieferung');
-$field->setNotice('Als JSON in der Form <code>{"Deutschland":"DE","Österreich":"AT","Schweiz":"CH"}</code> angeben.<br><code>rex_config::get("warehouse","country_codes")</code>');
+// ==== E-Mail
 
-$field = $form->addSelectField('cart_mode');
-$field->setLabel('Warenkorb Modus');
-$select = $field->getSelect();
-$select->addOptions([
-    'cart'=>'Warenkorb',
-    'page'=>'Artikelseite'
-]);
-$field->setNotice('Es kann entweder die Warenkorbseite aufgerufen werden oder die vorherige Artikelseite. Wenn die Artikelseite aufgerufen wird, so wird showcart=1 als Get-Parameter angehängt.<br><code>rex_config::get("warehouse","cart_mode")</code>');
+$form->addFieldset('Bestätigungen / E-Mail');
 
 $res = rex_sql::factory()->getArray('SELECT name FROM '.rex::getTable('yform_email_template'));
 $options = array_column($res, 'name');
@@ -93,6 +99,19 @@ $field->setNotice('<code>rex_config::get("warehouse","email_template_seller")</c
 $field = $form->addTextField('order_email');
 $field->setLabel('Bestellungen E-Mail Empfänger');
 $field->setNotice('Mehrere E-Mail Empfänger können mit Komma getrennt werden.<br><code>rex_config::get("warehouse","order_email")</code>');
+
+// ==== Rabatt
+
+$form->addFieldset('Rabatt');
+
+$field = $form->addTextField('global_discount_text');
+$field->setLabel('Text Allgemeiner Rabatt (Warenkorbrabatt)');
+$field->setNotice('Der Text wird im Warenkorb und in der Bestätigung angezeigt.<br><code>rex_config::get("warehouse","global_discount_text")</code>');
+
+$field = $form->addTextField('global_discount');
+$field->setLabel('Warenkorbrabatt in %');
+$field->setNotice('Der Wert wird zur Berechnung des Warenkorbrabatts verwendet. 0 eingeben für keinen Rabatt.<br><code>rex_config::get("warehouse","global_discount")</code>');
+
 
 // ==== Paypal
 
@@ -150,12 +169,20 @@ $field->setLabel('Giropay Startseite');
 $field->setNotice('<code>rex_config::get("warehouse","giropay_page_start")</code>');
 
 $field = $form->addLinkmapField('giropay_page_notify');
-$field->setLabel('Giropay Antwortseite');
-$field->setNotice('<code>rex_config::get("warehouse","giropay_page_notify")</code>');
+$field->setLabel('Giropay Notify Seite');
+$field->setNotice('<code>rex_config::get("warehouse","giropay_page_notify")</code> - Seite, die der Girocheckout Server aufruft. Wird nicht im Browser aufgerufen!');
+
+$field = $form->addLinkmapField('giropay_page_redirect');
+$field->setLabel('Giropay Redirect Seite');
+$field->setNotice('<code>rex_config::get("warehouse","giropay_page_redirect")</code> - Seite, auf die nach Abschluss der Zahlung weitergeleitet wird.');
 
 $field = $form->addLinkmapField('giropay_page_error');
 $field->setLabel('Giropay Fehler');
 $field->setNotice('<code>rex_config::get("warehouse","giropay_page_error")</code>');
+
+$field = $form->addLinkmapField('giropay_page_success');
+$field->setLabel('Giropay Zahlung erfolgreich');
+$field->setNotice('<code>rex_config::get("warehouse","giropay_page_success")</code>');
 
 
 

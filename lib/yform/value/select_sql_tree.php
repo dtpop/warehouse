@@ -242,19 +242,28 @@ class rex_yform_value_select_sql_tree extends rex_yform_value_abstract {
 
         $res = $sql->getArray();
         
-//        dump($res); exit;
-
         if ($res != NULL) {
 
             foreach ($res as $t) {
                 $v = str_repeat('- ', $level - 1) . $t['name'];
                 $k = $t['id'];
-                $return[] = array('id' => $k, 'name' => $v, 'name_raw' => $t['name'], 'image'=>$t['image']);
+                
+                $return[] = array_merge($t,array('id' => $k, 'name' => $v, 'name_raw' => $t['name']));
+                /*
+                
+                if (isset($t['image'])) {
+                    $return[] = array('id' => $k, 'name' => $v, 'name_raw' => $t['name'], 'image'=>$t['image']);
+                } else {
+                    $return[] = array('id' => $k, 'name' => $v, 'name_raw' => $t['name']);
+                }
+                 * 
+                 */
                 if ($depth == 0 || $level < $depth) {
                     $return = array_merge($return, $this->sqlTree($k, $level, $depth));
                 }
             }
         }
+        
         return $return;
     }
     
