@@ -62,7 +62,7 @@ class warehouse {
         $article = wh_articles::get_article($art_id);
         $attr_ids = rex_request('wh_attr','array',[]);
         $art_uid = trim($art_id . '$$' . implode('$$',$attr_ids),'$');
-        $attributes = wh_articles::get_selected_attributes($article, $attr_ids);
+        list($widget_attributes,$select_attributes) = wh_articles::get_selected_attributes($article, $attr_ids);
 
         $art = [];
         $art['count'] = rex_request('order_count', 'int') ?: 1;
@@ -83,11 +83,20 @@ class warehouse {
         $art['tax'] = $article->tax;
         $art['free_shipping'] = $article->free_shipping;
         $art['attributes'] = [];
-        
-        foreach ($attributes as $attr) {
+
+        // Attribute aus SELECT-Elementen
+        foreach ($select_attributes as $attr) {
+            $art['attributes'][] = $attr->getData();            
+        }
+        // Attribute aus WIDGET Elementen
+        foreach ($widget_attributes as $attr) {
             $art['attributes'][] = $attr->getData();
-            $art['price'] += $attr->price;
-            $art['name'] .= ' - ' . $attr->label;
+            if ($attr->at_pricemode == 'absolute') {
+                $art['price'] = $attr->price;                
+            } else {
+                $art['price'] += $attr->price;
+            }
+            $art['name'] .= ' ' . $attr->label;
         }
 
         $cart = self::get_cart();
