@@ -59,30 +59,37 @@ class warehouse {
     public static function add_to_cart() {
         $added = 0;
         $art_id = trim(rex_request('art_id'),'_');
-        $article = wh_articles::get_article($art_id);
-        $attr_ids = rex_request('wh_attr','array',[]);
-        $art_uid = trim($art_id . '$$' . implode('$$',$attr_ids),'$');
-        list($widget_attributes,$select_attributes) = wh_articles::get_selected_attributes($article, $attr_ids);
+        $select_attributes = [];
+        $widget_attributes = [];
+        if (rex_request('art_type','string') == 'wh_single') {
+            $art = wh_single_article::get_article();
+            $art_uid = $art['art_id'];
+        } else {
+            $article = wh_articles::get_article($art_id);
+            $attr_ids = rex_request('wh_attr','array',[]);
+            $art_uid = trim($art_id . '$$' . implode('$$',$attr_ids),'$');
+            list($widget_attributes,$select_attributes) = wh_articles::get_selected_attributes($article, $attr_ids);
 
-        $art = [];
-        $art['count'] = rex_request('order_count', 'int') ?: 1;
-        $art['price'] = $article->get_price();
-        if ($article->var_freeprice) {
-            $art['price'] = abs(rex_request('price', 'float'));
-            $art_id .= '-' . $art['price'];
+            $art = [];
+            $art['count'] = rex_request('order_count', 'int') ?: 1;
+            $art['price'] = $article->get_price();
+            if ($article->var_freeprice) {
+                $art['price'] = abs(rex_request('price', 'float'));
+                $art_id .= '-' . $art['price'];
+            }
+            $art['name'] = $article->get_name();
+            $art['cat_name'] = $article->cat_name;
+            $art['cat_id'] = $article->cat_id;
+            $art['description'] = $article->art_description;
+            $art['image'] = $article->get_image();
+            $art['art_id'] = $art_id;
+            $art['var_id'] = $article->var_id;
+            $art['var_whvarid'] = $article->var_whvarid;
+            $art['whid'] = $article->whid;
+            $art['tax'] = $article->tax;
+            $art['free_shipping'] = $article->free_shipping;
+            $art['attributes'] = [];
         }
-        $art['name'] = $article->get_name();
-        $art['cat_name'] = $article->cat_name;
-        $art['cat_id'] = $article->cat_id;
-        $art['description'] = $article->art_description;
-        $art['image'] = $article->get_image();
-        $art['art_id'] = $art_id;
-        $art['var_id'] = $article->var_id;
-        $art['var_whvarid'] = $article->var_whvarid;
-        $art['whid'] = $article->whid;
-        $art['tax'] = $article->tax;
-        $art['free_shipping'] = $article->free_shipping;
-        $art['attributes'] = [];
 
         // Attribute aus SELECT-Elementen
         foreach ($select_attributes as $attr) {
@@ -111,9 +118,14 @@ class warehouse {
         }
 
         rex_set_session('wh_cart', $cart);
-        dump($cart);
+//        dump($cart); exit;
         self::cart_recalc();
-        self::redirect_from_cart($added,1);
+        if (rex_request('art_type','string') == 'wh_single') {
+            rex_redirect(rex_request('article_id'),'',['showcart'=>1]);
+        } else {
+            self::redirect_from_cart($added,1);
+        }
+
     }
 
     /*
@@ -170,6 +182,7 @@ class warehouse {
             $factor = (100 + $taxpercent)/100;
             $cart[$k]['price_netto'] = round((float) $art['price'] / $factor, 2);
             $cart[$k]['total'] = $art['price'] * $art['count'];
+            $cart[$k]['taxsingle'] = ((float) $art['price'] - $cart[$k]['price_netto']);
             $cart[$k]['taxval'] = ((float) $art['price'] - $cart[$k]['price_netto']) * $art['count'];
             $cart[$k]['taxpercent'] = $taxpercent;
             $cart[$k]['total'] = $art['price'] * $art['count'];
@@ -305,7 +318,7 @@ class warehouse {
         foreach ($cart as $item) {
             $sum += $item['price_netto'] * $item['count'];
         }
-        return $sum;
+        return round($sum,2);
     }
 
     public static function get_tax_total() {
@@ -314,7 +327,7 @@ class warehouse {
         foreach ($cart as $item) {
             $sum += $item['taxval'];
         }
-        return $sum;
+        return round($sum,2);
     }
 
     public static function cart_positions_count() {
@@ -551,6 +564,51 @@ class warehouse {
                 ->setWhere('payment_id = :payment_id', ['payment_id' => $payment->id])
                 ->setWhere('payment_confirm = :empty', ['empty' => ''])
         ;
+        $sql->setValue('payment_confirm', date('Y-m-d H:i:s'));
+        $sql->update();
+        // db
+        // $payment->id = paypalId
+    }
+
+    public static function paypal_approved_v2($response) {
+
+/* $response
+PayPalHttp\HttpResponse {#170 ▼
+    +statusCode: 201
+    +result: {#151 ▼
+        +"id": "37G433630R1366212"
+        +"intent": "CAPTURE"
+        +"status": "COMPLETED"
+        +"purchase_units": array:1 [▼
+            0 => {#147 ▶}
+        ]
+        +"payer": {#167 ▶}
+        +"create_time": "2021-08-04T10:25:05Z"
+        +"update_time": "2021-08-04T10:25:15Z"
+        +"links": array:1 [▼
+            0 => {#169 ▶}
+        ]
+    }
+    +headers: array:10 [▼
+        "" => ""
+        "Content-Type" => "application/json"
+        "Content-Length" => "1653"
+        "Connection" => "keep-alive"
+        "Date" => "Wed, 04 Aug 2021 10"
+        "Application_id" => "APP-80W284485P519543T"
+        "Cache-Control" => "max-age=0, no-cache, no-store, must-revalidate"
+        "Caller_acct_num" => "TYMDVHDDBLE62"
+        "Paypal-Debug-Id" => "b9d0345b88d06"
+        "Strict-Transport-Security" => "max-age=31536000; includeSubDomains"
+    ]
+}
+*/
+
+
+        $sql = rex_sql::factory()->setTable(rex::getTable('wh_orders'))
+                ->setWhere('payment_id = :payment_id AND payment_confirm = ""', ['payment_id' => $response->result->id])
+        ;
+        $sql->setValue('paypal_confirm_token', json_encode($response));
         $sql->setValue('payment_confirm', date('Y-m-d H:i:s'));
         $sql->update();
         // db

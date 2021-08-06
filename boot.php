@@ -23,9 +23,6 @@ if (!rex::isBackend()) {
         if (rex_request('action','string') == 'add_to_cart') {
             warehouse::add_to_cart();
         }
-        if (rex_request('action','string') == 'add_group_to_cart') {
-            warehouse::add_group_to_cart();
-        }
         if (rex_request('action','string') == 'modify_cart') {
             // wird aufgerufen aus dem Warenkorb mit mod=+1 oder mod=-1 + art_id=...
             warehouse::modify_cart();

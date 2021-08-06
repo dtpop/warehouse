@@ -9,6 +9,14 @@
 $form = rex_config_form::factory('warehouse');
 $form->addFieldset('Warehouse - Einstellungen');
 
+$field = $form->addTextField('store_name');
+$field->setLabel('Name des Shops');
+$field->setNotice('<code>rex_config::get("warehouse","store_name")</code> (z.B. <code>Martin Muster GmbH</code>) - wird z.B. bei PayPal Zahlung an PayPal übermittelt.');
+
+$field = $form->addTextField('store_country_code');
+$field->setLabel('Ländercode des Shops');
+$field->setNotice('<code>rex_config::get("warehouse","store_country_code")</code> (z.B. <code>de-DE</code>) - wird z.B. bei PayPal Zahlung an PayPal übermittelt.');
+
 $field = $form->addLinkmapField('cart_page');
 $field->setLabel('Warenkorbseite');
 $field->setNotice('<code>rex_config::get("warehouse","cart_page")</code>');
