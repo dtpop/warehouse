@@ -2,6 +2,20 @@
 
 class wh_categories extends \rex_yform_manager_dataset {
 
+    public static function get_query() {
+        $clang = rex_clang::getCurrentId();
+        return self::query()
+            ->select('longtext_'.$clang,'`longtext`')
+            ->select('name_'.$clang,'`name`')
+        ;
+    }
+
+    public static function get_category($id = 0) {
+        $query = self::get_query();
+        $query->where('id',$id);
+        return $query->findOne();
+    }
+
     public static function get_children($cat, $depth = 1, $level = 0) {
         $clang = rex_clang::getCurrentId();
         $tree_select = new rex_yform_value_select_sql_tree();

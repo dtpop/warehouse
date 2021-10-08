@@ -3,7 +3,7 @@
 class wh_articles extends \rex_yform_manager_dataset {
 
     public function get_val($key) {
-        if ($this->{$key}) {
+        if (isset($this->{$key})) {
             return $this->{$key};
         } else {
             return 'nicht gefunden';
@@ -43,10 +43,14 @@ class wh_articles extends \rex_yform_manager_dataset {
     }
 
     public function get_price($with_currency = false) {
-        if ($with_currency) {
-            return rex_config::get('warehouse', 'currency_symbol') . '&nbsp;<span class="product_price">' . (isset($this->var_price) && $this->var_price ? $this->var_price : $this->price) . '</span>';
+        $price = $this->var_price ?: $this->price;
+        if (isset($this->var_add_parent_price) && $this->var_add_parent_price) {
+            $price = $this->price + $this->var_price;
         }
-        return $this->var_price ?: $this->price;
+        if ($with_currency) {
+            return rex_config::get('warehouse', 'currency_symbol') . '&nbsp;<span class="product_price">' . $price . '</span>';
+        }
+        return $price;
     }
 
     /*
@@ -111,6 +115,7 @@ class wh_articles extends \rex_yform_manager_dataset {
                 ->select('var.name_' . $clang, 'var_name')
                 ->select('var.image', 'var_image')
                 ->select('var.freeprice', 'var_freeprice')
+                ->select('var.add_parent_price', 'var_add_parent_price')
                 ->select('var.id', 'var_id')
                 ->select('var.whvarid', 'var_whvarid')
                 ->select('var.price', 'var_price')
@@ -155,7 +160,12 @@ class wh_articles extends \rex_yform_manager_dataset {
     }
 
     public function get_variants() {
-        
+        $clang = rex_clang::getCurrentId();
+        $query = rex_yform_manager_table::get(rex::getTable('wh_article_variants'))->query();
+        $query->select('name_'.$clang,'`name`');
+        $query->selectRaw('CONCAT("'.$this->id.'__",id)','art_id');
+        $query->where('parent_id',$this->id)->orderBy('prio');
+        return $query->find();        
     }
     
     public static function get_selected_attributes($article, $attr_ids) {

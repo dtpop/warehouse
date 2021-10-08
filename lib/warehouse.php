@@ -120,7 +120,7 @@ class warehouse {
         rex_set_session('wh_cart', $cart);
 //        dump($cart); exit;
         self::cart_recalc();
-        if (rex_request('art_type','string') == 'wh_single') {
+        if (rex_request('art_type','string') == 'wh_single' || (rex_config::get('warehouse','cart_mode') == 'page' && rex_request('article_id','int'))) {
             rex_redirect(rex_request('article_id'),'',['showcart'=>1]);
         } else {
             self::redirect_from_cart($added,1);
@@ -510,14 +510,14 @@ class warehouse {
         $user_data = self::get_user_data();
         $out = '';
 
-        $out .= 'Rechnungsadresse' . PHP_EOL;
+        $out .= 'Adresse' . PHP_EOL;
         $out .= PHP_EOL;
 
         $out .= $user_data['company'] ? $user_data['company'] . PHP_EOL : '';
         $out .= $user_data['firstname'] . ' ' . $user_data['lastname'] . PHP_EOL;
         $out .= $user_data['department'] ? $user_data['department'] . PHP_EOL : '';
         $out .= $user_data['address'] ? $user_data['address'] . PHP_EOL : '';
-        $out .= $user_data['country'] . ' ' . $user_data['zip'] . ' ' . $user_data['city'] . PHP_EOL;
+        $out .= trim($user_data['country'] . ' ' . $user_data['zip'] . ' ' . $user_data['city']) . PHP_EOL;
         $out .= PHP_EOL;
         $out .= $user_data['phone'] ? 'Telefon: ' . $user_data['phone'] . PHP_EOL : '';
         $out .= $user_data['email'] ? $user_data['email'] . PHP_EOL : '';
@@ -527,14 +527,14 @@ class warehouse {
             $out .= $user_data['birthdate'] . PHP_EOL;
         }
         $out .= PHP_EOL;
-        $out .= 'Lieferadresse' . PHP_EOL;
+        $out .= 'Rechnungsadresse' . PHP_EOL;
         $out .= PHP_EOL;
 
         $out .= $user_data['to_company'] ? $user_data['to_company'] . PHP_EOL : '';
         $out .= $user_data['to_firstname'] . ' ' . $user_data['to_lastname'] . PHP_EOL;
         $out .= $user_data['to_department'] ? $user_data['to_department'] . PHP_EOL : '';
         $out .= $user_data['to_address'] ? $user_data['to_address'] . PHP_EOL : '';
-        $out .= $user_data['to_country'] . ' ' . $user_data['to_zip'] . ' ' . $user_data['to_city'] . PHP_EOL;
+        $out .= trim($user_data['to_country'] . ' ' . $user_data['to_zip'] . ' ' . $user_data['to_city']) . PHP_EOL;
         $out .= PHP_EOL;
         $out .= $user_data['note'] ? 'Bemerkung:' . PHP_EOL . $user_data['note'] . PHP_EOL : '';
         $out .= PHP_EOL;
@@ -673,7 +673,7 @@ PayPalHttp\HttpResponse {#170 ▼
         $value_pool = $params->params['value_pool']['email'];
         foreach (self::$fields as $field) {
             if (in_array('to_'.$field,self::$fields)) {
-                $value_pool['to_' . $field] = $value_pool['to_' . $field] ?: $value_pool[$field];
+                $value_pool['to_' . $field] = $value_pool['to_' . $field] ?? ($value_pool[$field] ?? '');
             }
         }
         

@@ -1,5 +1,5 @@
 package: warehouse
-version: '0.2'
+version: '0.3'
 author: Wolfgang Bund
 
 page:
@@ -13,7 +13,7 @@ page:
         info: { title: 'Info', itemclass: pull-right }
 
 requires:
-    redaxo: '^5.5'
+    redaxo: '^5.11'
     packages:
         structure: '^2.0'
         yform/manager: '>3'
