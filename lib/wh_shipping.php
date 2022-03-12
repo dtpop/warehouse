@@ -14,10 +14,24 @@
 class wh_shipping {
     
     public static function get_cost() {
-        
+
+        $cart = warehouse::get_cart();
+
+        // prüft, ob überhaupt Artikel mit Fracht im Warenkorb liegen.
+        $free_shipping = true;
+        foreach ($cart as $ci) {
+            if (!$ci['free_shipping']) {
+                $free_shipping = false;
+                break;
+            }
+        }
+        if ($free_shipping) {
+            return 0;
+        }
+
         // Nach Stück
         if (rex_config::get('warehouse','shipping_mode') == 'pieces') {
-            $cart = warehouse::get_cart();
+
             $sum_pcs = 0;
             foreach ($cart as $ci) {
                 if ((int) $ci['free_shipping'] < 1) {

@@ -40,7 +40,7 @@ class rex_yform_value_widget_record extends rex_yform_value_abstract
 //        dump($this);
     }
 
-    public function getDefinitions()
+    public function getDefinitions() : array
     {
         return [
             'type' => 'value',
@@ -68,7 +68,10 @@ class rex_yform_value_widget_record extends rex_yform_value_abstract
         $res = [];
         foreach (explode(',',$value) as $val) {
             $sql->setQuery($qry,['id'=>$val]);
-            $res[] = $sql->getArray()[0];
+            $db_result = (array) $sql->getArray();
+            if (count($db_result)) {
+                $res[] = $db_result[0];
+            }
         }
         return $res;
     }

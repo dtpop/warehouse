@@ -121,12 +121,12 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
             
             
         }
-        
+
 //        $this->params['value_pool']['email'][$this->getElement(1)] = $this->getValue();
 //        $this->params['value_pool']['sql'][$this->getElement(1)] = json_encode($this->getValue());
         
-        if ($this->params['send']) {
-            $this->save_values();
+        if ($this->params['send'] && $this->fetchValues()) {
+//            $this->save_values();
         }
 
         
@@ -205,7 +205,7 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
     private function save_values() {
         $main_id = $this->params['main_id'];
         $values = $this->fetchValues();
-//        dump($values);
+//        dump($values); exit;
         $attributes_for_article = $this->get_attributes_for_article();
         $attribute_value_table = $this->elements['table_attributevalues'];
 
@@ -272,6 +272,8 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
      * Lädt die gespeicherten Werte
      */
     private function load_values() {
+        return [];
+        
         $main_id = $this->params['main_id'];
         $attributes_for_article = $this->get_attributes_for_article();
         $attribute_value_table = $this->elements['table_attributevalues'];
@@ -318,7 +320,7 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
     }
     
     
-    public function getDefinitions()
+    public function getDefinitions() : array
     {
         return [
             'type' => 'value',
@@ -341,7 +343,7 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
      * 
      * @param type $params
      */
-    public static function getListValues($table, $field_name, $value) {
+    public static function getListValues($table, $field_name, $value) : string {
         $qry = "SELECT id, $field_name name FROM `$table` WHERE id = :id";
         
         $sql = rex_sql::factory();

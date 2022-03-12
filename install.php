@@ -3,13 +3,7 @@
 // Tabellen
 
 $tables = [
-    'wh_articles',
-    'wh_article_variants',
-    'wh_categories',
-    'wh_attributes',
-    'wh_attribute_values',
-    'wh_attributegroups',
-    'wh_orders'    
+    'warehouse',
 ];
 
 foreach ($tables as $table) {

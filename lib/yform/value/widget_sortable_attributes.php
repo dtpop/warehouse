@@ -200,7 +200,7 @@ class rex_yform_value_widget_sortable_attributes extends rex_yform_value_abstrac
     }
     
     
-    public function getDefinitions()
+    public function getDefinitions() : array
     {
         return [
             'type' => 'value',

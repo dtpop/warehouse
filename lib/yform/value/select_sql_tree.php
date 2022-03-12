@@ -94,11 +94,11 @@ class rex_yform_value_select_sql_tree extends rex_yform_value_abstract {
         }
     }
 
-    public function getDescription() {
+    public function getDescription() : string {
         return 'select_sql_tree|name|label| select id,name from table order by name | [defaultvalue] | [no_db] |1/0 Leeroption|Leeroptionstext|1/0 Multiple Feld|selectsize';
     }
 
-    public function getDefinitions() {
+    public function getDefinitions() : array {
         return [
             'type' => 'value',
             'name' => 'select_sql_tree',
@@ -123,7 +123,7 @@ class rex_yform_value_select_sql_tree extends rex_yform_value_abstract {
         ];
     }
 
-    public static function getListValue($params) {
+    public static function getListValue($params) : string {
         $return = [];
 
         $query = $params['params']['field']['query'];

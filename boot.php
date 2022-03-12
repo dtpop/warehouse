@@ -12,7 +12,7 @@ if (rex::isBackend()) {
     rex_view::addJsFile($this->getAssetsUrl('scripts/wh_be_script.js'));
 }
 
-if (!rex::isBackend()) {
+if (rex::isFrontend()) {
 
     $curDir = __DIR__;
     require_once $curDir . '/functions/helper.php';
@@ -20,6 +20,18 @@ if (!rex::isBackend()) {
     rex_login::startSession();
 
     rex_extension::register('PACKAGES_INCLUDED', function () {
+
+        $user_path = rex_session('user_path','array');
+        if (!$_REQUEST || (count($_REQUEST) == 1) && isset($_REQUEST['PHPSESSID'])) {
+            // ausschliessen: Fehler Artikel, Shop Detailseite
+            if (false === in_array(rex_article::getCurrentId(),[rex_article::getNotfoundArticleId(),25])) {
+                $user_path[] = rex_article::getCurrentId();
+                $user_path = array_slice($user_path,-5);
+                rex_set_session('user_path',$user_path);
+//                dump($user_path);
+            }
+        }
+
         if (rex_request('action', 'string') == 'add_to_cart') {
             warehouse::add_to_cart();
         }
@@ -73,8 +85,34 @@ if (!rex::isBackend()) {
                 warehouse::set_cart_from_payment_id(rex_get('paymentId'));
                 wh_paypal::execute_payment();
                 // Führt den E-Mail Versand im Hintergrund aus
-                $yf = warehouse::summary_form(true);
+//                $yf = warehouse::summary_form(true);
                 warehouse::clear_cart();
+            }
+
+
+            // Bei Dankeseite Wallee - Zahlungsbestätigung Wallee
+            if (rex_get('action') == 'wpayment_confirm') {
+                $user_data = warehouse::get_user_data();
+                if (rex_get('key') == $user_data['payment_confirm']) {
+                    // Confirm Order in db
+                    $order = wh_orders::query()
+                        ->where('payment_confirm',rex_get('key'))->where('payed',0)
+                        ->findOne();
+                    if (!$order) {
+                        rex_redirect(rex_config::get("warehouse","payment_error"));
+                    }
+                    $order->setValue('payed',1);
+                    if (!$order->save()) {
+                        rex_redirect(rex_config::get("warehouse","payment_error"));
+                    }
+
+                    // Send Mails
+                    warehouse::send_mails();
+                    warehouse::update_stock();
+                    warehouse::clear_cart();
+                } else {
+                    rex_redirect(rex_config::get("warehouse","payment_error"));
+                }
             }
         }
     });
