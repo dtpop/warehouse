@@ -12,11 +12,11 @@ foreach ($tables as $table) {
     rex_yform_manager_table_api::importTablesets($content);
 }
 
-
+/*
 rex_sql_table::get(rex::getTable('wh_attributes'))
   ->ensureColumn(new rex_sql_column('pricemode', 'varchar(191)', false, ''))
   ->alter();
-
+*/
 
 rex_delete_cache();
 rex_yform_manager_table::deleteCache();
