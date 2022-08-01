@@ -55,7 +55,9 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
 //                    $sel->setSize(1);
                     $sel->setAttribute('class', 'form-control selectpicker');
                     $sel->setMultiple();
-                    $sel->setSelected($values[$i]);
+                    if (isset($values[$i])) {
+                        $sel->setSelected($values[$i]);
+                    }
                     foreach (explode('|',$attr['values']) as $v) {
                         $_v = explode('=',$v);
                         $sel->addOption($_v[0], isset($_v[1]) ? $_v[1] : $_v[0]);
