@@ -10,6 +10,7 @@ rex_yform::addTemplatePath($this->getPath('ytemplates'));
 
 if (rex::isBackend()) {
     rex_view::addJsFile($this->getAssetsUrl('scripts/wh_be_script.js'));
+    rex_view::addCssFile($this->getAssetsUrl('styles/wh_be_css.css'));
 }
 
 if (rex::isFrontend()) {

@@ -12,4 +12,10 @@ $(function () {
             $(this).closest("tr").remove();
         }
     });
+
+    $('.wh-aufklapp').on('click',function(e) {
+        $(this).next('.wh-klappauf').toggleClass('open');
+    });
+
+
 });
