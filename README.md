@@ -57,6 +57,13 @@ Minimal Beispielimport Datenbank und Dateien installieren. Die Beispieldateien l
 PHP Mailer konfigurieren.
 Für Paypal Bestellungen in Warehouse Paypal Parameter ergänzen.
 
+### Ergänzungen
+
+im Warenkorb kann die Anzahl per Input-Felder geändert werden.
+<input type="hidden" name="action" value="modify_cart">
+<input type="hidden" name="mod" value="qty">
+<input name="<?= $uid ?>" type="text" maxlength="3" value="<?= $item['count'] ?>">
+
 #### Bekannte Fehler
 In der obigen Konfiguration kann die Bestelltabelle nicht aufgerufen werden. Hierfür muss zusätzlich die ycom installiert werden und in der ycom Usertabelle das Feld company angelegt werden.
 Die Bilder in der Demo sind absichtlich verkleinert.

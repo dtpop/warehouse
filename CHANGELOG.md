@@ -15,3 +15,4 @@ Auch wenn Sie keine Attribute verwenden, müssen ggf. Fragmente angepasst werden
 ## Version 0.3
 - Varianten können den Preis des Basisartikels übernehmen.
 - get_variants liefert die Varianten als yorm Objekt
+- im Warenkorb kann die Anzahl per Input-Felder geändert werden.

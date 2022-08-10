@@ -243,6 +243,21 @@ class warehouse
     }
 
     /**
+     * Aufruf aus dem Warenkorb
+     * Feldnamen = Artikel_Ids.
+     */
+    public static function modify_qty() {
+        $cart = self::get_cart();
+        foreach ($cart as $art_uid=>$item) {
+            if ($qty = rex_request($art_uid,'int')) {
+                $cart[$art_uid]['count'] = $qty;
+            }
+        }
+        rex_set_session('wh_cart', $cart);
+        self::cart_recalc();
+    }
+
+    /**
      * Total (Warenkorb mit Shipping)
      * @return type
      */
@@ -394,7 +409,12 @@ class warehouse
         $order_text .= PHP_EOL . PHP_EOL;
         $order_text .= self::get_order_text();
 
+
         $sql = rex_sql::factory();
+
+        $sql->setTable(rex::getTable('wh_orders'));
+        $fields = $sql->select()->getFieldnames();        
+
         $sql->setDebug();
         $values = [
             'order_total' => $total,
@@ -416,6 +436,13 @@ class warehouse
             'city' => $user_data['city'] ?? '',
             'email' => $user_data['email']
         ];
+
+        foreach ($values as $k=>$v) {
+            if (!in_array($k,$fields)) {
+                unset($values[$k]);
+            }
+        }
+
         if (rex_addon::get('ycom')->isAvailable()) {
             $ycom_user = rex_ycom_auth::getUser();
             if ($ycom_user) {
@@ -578,7 +605,7 @@ class warehouse
         $out .= PHP_EOL;
 
         $out .= ($user_data['company'] ?? '') ? $user_data['company'] . PHP_EOL : '';
-        $out .= $user_data['salutation'] . PHP_EOL;
+        $out .= ($user_data['salutation'] ?? '') ? $user_data['salutation'] . PHP_EOL : '';
         $out .= $user_data['firstname'] . ' ' . $user_data['lastname'] . PHP_EOL;
         $out .= ($user_data['department'] ?? '') ? $user_data['department'] . PHP_EOL : '';
         $out .= ($user_data['address'] ?? '') ? $user_data['address'] . PHP_EOL : '';

@@ -37,8 +37,13 @@ if (rex::isFrontend()) {
             warehouse::add_to_cart();
         }
         if (rex_request('action', 'string') == 'modify_cart') {
-            // wird aufgerufen aus dem Warenkorb mit mod=+1 oder mod=-1 + art_id=...
-            warehouse::modify_cart();
+            if (rex_request('mod','string') == 'qty') {
+                // Aufruf aus dem Warenkorb
+                warehouse::modify_qty();
+            } else {
+            // wird aufgerufen aus dem Warenkorb mit mod=+1 oder mod=-1 + art_id=... 
+                warehouse::modify_cart();
+            }
         }
         // löscht Anzahl 0-Artikel auf der Bestellbestätigungsseite komplett aus dem Warenkorb
         if (rex_article::getCurrentId() == rex_config::get('warehouse', 'order_page')) {
