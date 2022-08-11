@@ -51,6 +51,15 @@ class wh_paypal
         $cancel_url = trim(rex::getServer(), '/') . rex_getUrl(rex_config::get('warehouse', 'paypal_page_error'));
         $cart = warehouse::get_cart();
         $user_data = warehouse::get_user_data();
+
+        $user_data['to_firstname'] = $user_data['to_firstname'] ?: $user_data['firstname'];
+        $user_data['to_lastname'] = $user_data['to_lastname'] ?: $user_data['lastname'];
+        $user_data['to_address'] = $user_data['to_address'] ?: $user_data['address'];
+        $user_data['to_department'] = $user_data['to_department'] ?: $user_data['department'];
+        $user_data['to_country'] = $user_data['to_country'] ?: $user_data['country'];
+        $user_data['to_zip'] = $user_data['to_zip'] ?: $user_data['zip'];
+        $user_data['to_city'] = $user_data['to_city'] ?: $user_data['city'];
+
         $items = [];
         foreach ($cart as $position) {
             $items[] = [
@@ -73,10 +82,10 @@ class wh_paypal
         // https://developer.paypal.com/docs/checkout/reference/server-integration/set-up-transaction/
         $purchase_units = [
             [
-                'reference_id' => 'PUHF',
-                'description' => 'Sporting Goods',
-                'custom_id' => 'CUST-HighFashions',
-                'soft_descriptor' => 'HighFashions',
+                'reference_id' => 'none',
+                'description' => rex_config::get("warehouse","store_name"),
+                'custom_id' => $user_data['to_firstname'].' '.$user_data['to_lastname'],
+                'soft_descriptor' => 'Webshop',
                 'amount' =>
                 [
                     'currency_code' => rex_config::get('warehouse', 'currency'),
@@ -113,7 +122,7 @@ class wh_paypal
                     'method' => 'Versandweg',
                     'address' =>
                     [
-                        'address_line_1' => $user_data['to_address'],
+                        'address_line_1' => $user_data['to_address'] ,
                         'address_line_2' => $user_data['to_department'],
                         'admin_area_2' => $user_data['to_city'],
                         'admin_area_1' => '',
