@@ -249,6 +249,7 @@ $select = $field->getSelect();
 $select->addOptions([
     0 => 'Standard (Pauschal)',
     'pieces' => 'nach Stück',
+    'weight' => 'nach Gewicht',
     'order_total' => 'Betrag (brutto)',
 ]);
 

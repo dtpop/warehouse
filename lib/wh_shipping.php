@@ -17,6 +17,8 @@ class wh_shipping {
 
         $cart = warehouse::get_cart();
 
+
+
         // prüft, ob überhaupt Artikel mit Fracht im Warenkorb liegen.
         $free_shipping = true;
         foreach ($cart as $ci) {
@@ -29,9 +31,8 @@ class wh_shipping {
             return 0;
         }
 
-        // Nach Stück
         if (rex_config::get('warehouse','shipping_mode') == 'pieces') {
-
+            // Nach Stück
             $sum_pcs = 0;
             foreach ($cart as $ci) {
                 if ((int) $ci['free_shipping'] < 1) {
@@ -41,7 +42,20 @@ class wh_shipping {
             if (($shipping = self::check_val($sum_pcs)) !== false) {
                 return $shipping;
             }
-        // Nach Betrag (Brutto)
+        } elseif (rex_config::get('warehouse','shipping_mode') == 'weight') {
+            // Nach Gewicht (Alle weight zusammengezählt)
+            $weight = 0;
+            foreach ($cart as $uid=>$item) {
+                $wh_article = wh_articles::get_article($uid);
+                if ($wh_article && isset($wh_article->weight) && $wh_article->weight) {
+                    $weight += $wh_article->weight * $item['count'];
+                }
+            }
+            $shipping = self::check_val($weight);
+            if ($shipping !== false) {
+                return $shipping;
+            }            
+
         } elseif (rex_config::get('warehouse','shipping_mode') == 'order_total') {
             $sum_brutto = warehouse::get_sub_total();
             $shipping = self::check_val($sum_brutto);
@@ -64,31 +78,31 @@ class wh_shipping {
         foreach ($shipping_params as $param) {
             switch ($param[0]) {
                 case '>':
-                    if ((int) $check_val > (int) $param[1]) {
+                    if ((float) $check_val > (float) $param[1]) {
                         return $param[2];
                         $stop = true;
                     }
                     break;
                 case '>=':
-                    if ((int) $check_val >= (int) $param[1]) {
+                    if ((float) $check_val >= (float) $param[1]) {
                         return $param[2];
                         $stop = true;
                     }
                     break;
                 case '<':
-                    if ((int) $check_val < (int) $param[1]) {
+                    if ((float) $check_val < (float) $param[1]) {
                         return $param[2];
                         $stop = true;
                     }
                     break;
                 case '<=':
-                    if ($check_val <= $param[1]) {
+                    if ((float) $check_val <= (float) $param[1]) {
                         return $param[2];
                         $stop = true;
                     }
                     break;
                 case '=':
-                    if ($check_val == $param[1]) {
+                    if ((float) $check_val == (float) $param[1]) {
                         return $param[2];
                         $stop = true;
                     }
