@@ -52,13 +52,13 @@ class wh_paypal
         $cart = warehouse::get_cart();
         $user_data = warehouse::get_user_data();
 
-        $user_data['to_firstname'] = $user_data['to_firstname'] ?: $user_data['firstname'];
-        $user_data['to_lastname'] = $user_data['to_lastname'] ?: $user_data['lastname'];
-        $user_data['to_address'] = $user_data['to_address'] ?: $user_data['address'];
-        $user_data['to_department'] = $user_data['to_department'] ?: $user_data['department'];
-        $user_data['to_country'] = $user_data['to_country'] ?: $user_data['country'];
-        $user_data['to_zip'] = $user_data['to_zip'] ?: $user_data['zip'];
-        $user_data['to_city'] = $user_data['to_city'] ?: $user_data['city'];
+        $user_data['to_firstname'] = $user_data['to_firstname'] ?: $user_data['firstname'] ?? '';
+        $user_data['to_lastname'] = $user_data['to_lastname'] ?: $user_data['lastname'] ?? '';
+        $user_data['to_address'] = $user_data['to_address'] ?: $user_data['address'] ?? '';
+        $user_data['to_department'] = $user_data['to_department'] ?: $user_data['department'] ?? '';
+        $user_data['to_country'] = $user_data['to_country'] ?: $user_data['country'] ?? '';
+        $user_data['to_zip'] = $user_data['to_zip'] ?: $user_data['zip'] ?? '';
+        $user_data['to_city'] = $user_data['to_city'] ?: $user_data['city'] ?? '';
 
         $items = [];
         foreach ($cart as $position) {
