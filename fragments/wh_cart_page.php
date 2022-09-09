@@ -92,7 +92,7 @@
                         </div>
                         <div class="uk-grid-small uk-grid" uk-grid="">
                             <div class="uk-width-expand uk-text-muted">{{ Shipping }}</div>
-                            <div class="uk-text"><?= rex_config::get('warehouse','currency_symbol') ?>&nbsp;<?= number_format(warehouse::get_shipping_cost(),2) ?></div>
+                            <div class="uk-text"><?= rex_config::get('warehouse','currency_symbol') ?>&nbsp;<?= number_format((float) warehouse::get_shipping_cost(),2) ?></div>
                         </div>
                     </div>
                     <div class="uk-card-body">

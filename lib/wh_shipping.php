@@ -47,9 +47,15 @@ class wh_shipping {
             $weight = 0;
             foreach ($cart as $uid=>$item) {
                 $wh_article = wh_articles::get_article($uid);
+//                dump($wh_article);
+                $art_weight = 0;
                 if ($wh_article && isset($wh_article->weight) && $wh_article->weight) {
-                    $weight += $wh_article->weight * $item['count'];
+                    $art_weight = $wh_article->weight * $item['count'];
                 }
+                if ($wh_article && isset($wh_article->var_weight) && (float) $wh_article->var_weight) {
+                    $art_weight = $wh_article->var_weight * $item['count'];
+                }
+                $weight += $art_weight;
             }
             $shipping = self::check_val($weight);
             if ($shipping !== false) {

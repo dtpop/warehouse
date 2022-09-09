@@ -4,8 +4,8 @@ class warehouse
 {
 
     static $fields = [
-        'firstname', 'lastname', 'birthdate', 'company', 'department', 'address', 'zip', 'city', 'country', 'email', 'phone',
-        'to_firstname', 'to_lastname', 'to_company', 'to_department', 'to_address', 'to_zip', 'to_city', 'to_country',
+        'salutation','firstname', 'lastname', 'birthdate', 'company', 'department', 'address', 'zip', 'city', 'country', 'email', 'phone',
+        'to_salutation','to_firstname', 'to_lastname', 'to_company', 'to_department', 'to_address', 'to_zip', 'to_city', 'to_country',
         'separate_delivery_address', 'payment_type', 'note', 'iban', 'bic', 'direct_debit_name', 'giropay_bic', 'info_news_ok'
     ];
 
@@ -633,6 +633,7 @@ class warehouse
         $out .= PHP_EOL;
         $out .= ($user_data['note'] ?? '') ? 'Bemerkung:' . PHP_EOL . $user_data['note'] . PHP_EOL : '';
         $out .= PHP_EOL;
+        /*
         $out .= 'Zahlungsweise: ' . self::get_payment_type($user_data['payment_type']) . PHP_EOL;
         $out .= PHP_EOL;
         if ($user_data['payment_type'] == 'direct_debit') {
@@ -644,6 +645,7 @@ class warehouse
                 $out .= 'Kontoinhaber: ' . $user_data['firstname'] . ' ' . $user_data['lastname'] . PHP_EOL;
             }
         }
+        */
 
         return $out;
     }

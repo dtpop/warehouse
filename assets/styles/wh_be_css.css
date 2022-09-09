@@ -12,3 +12,6 @@
 	margin-left: 15px;
 }
 
+.edittable.wh_relayprice {
+	display: none;
+}

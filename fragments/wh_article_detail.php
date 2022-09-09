@@ -8,6 +8,8 @@
 
 $main_article = $this->articles[0]->getData();
 $wh_prop = rex::getProperty('wh_prop');
+
+
 ?>
 <div class="uk-grid-medium" uk-grid>
     <div>

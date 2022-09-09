@@ -49,12 +49,12 @@ class wh_articles extends \rex_yform_manager_dataset {
     }
 
     public function get_price($with_currency = false) {
-        $price = $this->var_price ?: $this->price;
+        $price = $this->var_price ?? $this->price;
         if (isset($this->var_add_parent_price) && $this->var_add_parent_price) {
             $price = $this->price + $this->var_price;
         }
         if ($with_currency) {
-            return rex_config::get('warehouse', 'currency_symbol') . '&nbsp;<span class="product_price">' . $price . '</span>';
+            return rex_config::get('warehouse', 'currency_symbol') . '&nbsp;<span class="product_price">' . number_format($price,2) . '</span>';
         }
         return $price;
     }
@@ -124,7 +124,9 @@ class wh_articles extends \rex_yform_manager_dataset {
                 ->select('var.add_parent_price', 'var_add_parent_price')
                 ->select('var.id', 'var_id')
                 ->select('var.whvarid', 'var_whvarid')
+                ->select('var.weight', 'var_weight')
                 ->select('var.price', 'var_price')
+                ->select('var.relay_price', 'var_relay_price')
                 ->select('var.gallery', 'var_gallery')
                 ->select('cat.name_' . $clang, 'cat_name')
                 ->select('cat.id', 'cat_id')
@@ -167,128 +169,7 @@ class wh_articles extends \rex_yform_manager_dataset {
         return $query->find();        
     }
   
-
-    public static function get_selected_attributes($article, $attr_ids) {
-        // wenn in der attr_id ## vorkommen, sind sie aus einem Select und müssen erst entschlüsselt werden.
-        // 1. Wert ist wh_attributes.id, 2. Wert der Value
-        $clang = rex_clang::getCurrentId();
-        $widget_data = self::query(rex::getTable('wh_attribute_values'))
-            ->alias('av')
-            ->leftJoin('rex_wh_attributes', 'at', 'av.attribute_id', 'at.id')
-            ->select('at.name_' . $clang, 'at_name')
-            ->select('at.unit', 'at_unit')
-            ->select('at.type', 'at_type')
-            ->select('at.orderable', 'at_orderable')
-            ->select('at.whattrid', 'at_whattrid')
-            ->select('at.pricemode', 'at_pricemode')
-            ->whereRaw('FIND_IN_SET (value, "'.implode(',',$attr_ids).'")')
-            ->where('av.article_id', $article->id)
-            ->orderBy('at.prio')
-            ->orderBy('av.prio')
-            ->find();
-        $select_data = self::select_selected_attributes($attr_ids);
-        return [$widget_data,$select_data];
-    }
     
-    
-    public static function select_selected_attributes ($attr_ids) {
-        // wenn in der attr_id ~~ vorkommen, sind sie aus einem Select und müssen erst entschlüsselt werden.
-        // 1. Wert ist wh_attributes.id, 2. Wert der Value
-        $result = [];
-        foreach ($attr_ids as $k=>$attr_id) {
-            // unpassende rauswerfen
-            if (strpos($attr_id,'~') === false) {
-                continue;
-            }
-            list($main_id,$attr_val) = explode('~~',$attr_id);
-            $result[] = self::get_attribute($main_id,$attr_val);
-        }
-        return $result;        
-    }
-    
-    public static function get_attribute($id,$attr_val) {
-        $at = self::query(rex::getTable('wh_attributes'))
-            ->where('id', $id)
-            ->findOne()
-            ;
-        $values = self::attr_to_array($at->values);
-        $at->value = $values[$attr_val];
-        $at->attr_id = $attr_val;
-        return $at;        
-    }
-    
-    
-
-    public static function get_attributes_for_article($article) {
-//        dump($article->id); exit;
-        $clang = rex_clang::getCurrentId();
-        
-        $atg = self::query(rex::getTable('wh_attributegroups'))
-            ->where('id', $article->attributegroup_id)
-            ->findOne()
-            ;
-        
-        if (!$atg) {
-            return [];
-        }
-        
-        $at = self::query(rex::getTable('wh_attributes'))
-            ->alias('at')
-            ->whereRaw('FIND_IN_SET (id, "'.$atg->attributes.'")')
-            ->find()
-            ;
-        
-        $outdata = [];
-        
-        foreach ($at as $k=>$attr) {
-            $data = self::query(rex::getTable('wh_attribute_values'))
-                ->alias('av')
-                ->leftJoin('rex_wh_attributes', 'at', 'av.attribute_id', 'at.id')
-                ->select('at.name_' . $clang, 'at_name')
-                ->select('at.unit', 'at_unit')
-                ->select('at.type', 'at_type')
-                ->select('at.orderable', 'at_orderable')
-                ->select('at.whattrid', 'at_whattrid')
-                ->select('at.pricemode', 'at_pricemode')
-                ->where('av.attribute_id', $attr->id)
-                ->where('av.article_id', $article->id)
-                ->orderBy('at.prio')
-                ->orderBy('av.prio')
-                ->find();
-            
-            foreach ($data as $k=>$v) {
-                if ($attr->pricemode == 'absolute') {
-                    $data[$k]->price_absolute = $v->price;
-                } else {
-                    $data[$k]->price_absolute = (float) $article->price + (float) $v->price;                    
-                }
-            }
-            
-            $outdata[] = [
-                'attr'=>$attr->getData(),
-                'data'=>$data
-                ];
-        }
-        
-        return $outdata;
-    }
-    
-    
-    public static function attr_to_array($values) {
-        $a1 = explode('|',$values);
-        $out = [];
-        foreach ($a1 as $v) {
-            $a2 = explode('=',$v);
-            if (isset($a2[1])) {
-                $out[$a2[1]] = $a2[0];
-            } else {
-                $out[$a2[0]] = $a2[0];                
-            }
-        }
-        return $out;
-    }
-        
-
     
 
 }

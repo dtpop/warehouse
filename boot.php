@@ -11,6 +11,10 @@ rex_yform::addTemplatePath($this->getPath('ytemplates'));
 if (rex::isBackend()) {
     rex_view::addJsFile($this->getAssetsUrl('scripts/wh_be_script.js'));
     rex_view::addCssFile($this->getAssetsUrl('styles/wh_be_css.css'));
+    
+    rex_view::addCssFile($this->getAssetsUrl('edittable/jquery.edittable.min.css?mtime=' . filemtime($this->getAssetsPath('edittable/jquery.edittable.min.css'))));
+    rex_view::addJsFile($this->getAssetsUrl('edittable/jquery.edittable.min.js?mtime=' . filemtime($this->getAssetsPath('edittable/jquery.edittable.min.js'))));
+    
 }
 
 if (rex::isFrontend()) {
