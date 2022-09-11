@@ -970,6 +970,84 @@ PayPalHttp\HttpResponse {#170 ▼
 
     }
 
+    /**
+     * check_input_weight
+     * 
+     * Kann als Validate Funktion in yform verwendet werden.
+     * 
+     * warehouse::check_input_weight
+     * 
+     * Feld weight
+     */
+    public static function check_input_weight ($params, $vars, $names = '', $yform) {
+
+        if (!trim(rex_config::get('warehouse','check_weight'),'|')) {
+            // wenn in den Einstellungen kein Gewichtscheck aktiviert ist, Gewicht nicht prüfen
+            return false;
+        }
+
+        $names = explode(',', $names);
+
+        $art_weight = 0;
+        $var_weight = 0;
+
+        $has_error = false;
+        $has_variants = false;
+
+        foreach ($yform->getObjects() as $Object) {            
+            if ($Object->getName() == 'weight') {
+                $art_weight = (float) $Object->getValue();
+            }
+        }            
+
+        foreach ($yform->getObjects() as $Object) {
+
+            if ($Object->getName() == 'variants_id') {
+
+                $be_relation_values = $Object->getValue();
+                $table = rex_yform_manager_table::get(rex::getTable('wh_article_variants'));
+
+                // ----- Find PrioFieldname if exists
+                $prioFieldName = '';
+                $fields = [];
+                foreach ($table->getFields() as $field) {
+                    if ('value' == $field->getType()) {
+                        if ('prio' == $field->getTypeName()) {
+                            $prioFieldName = $field->getName();
+                        } else {
+                            $fields[] = $field->getName();
+                        }
+                    }
+                }
+                $weight_field_num = 0;
+                foreach ($fields as $k=>$v) {
+                    // an welcher Stelle der Fieldlist steht das Gewichtsfeld? => $weight_field_num
+                    if ('weight' == $v) {
+                        $weight_field_num = $k;
+                        break;
+                    }
+                }
+
+                foreach ($be_relation_values as $be_value) {
+                    $has_variants = true;
+                    $var_weight = (float) $be_value[$weight_field_num] ?? 0;
+                    if (($art_weight + $var_weight) == 0) {
+                        $has_error = true;
+                    }
+                }
+                
+            }
+
+        }
+
+        if (!$has_variants && $art_weight == 0) {
+            $has_error = true;
+        }
+
+        return $has_error;
+
+    }
+
 
     /**
      * Versucht den Warenkorb bei fehlgeschlagenem Giropay wieder zu laden

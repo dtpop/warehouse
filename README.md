@@ -16,6 +16,14 @@ Eine Livevorschau kann man hier anschauen: https://warehouse.ferien-am-tressower
 
 Von diesem Liveshop sind Demodaten im AddOn enthalten. Sowohl Files als auch Datenbank können aus dem Verzeichnis install/demo in REDAXO importiert werden. Achtung! Vorhandene Inhalte, Templates und Module werden dabei gelöscht.
 
+## Gewichte
+
+Ebenso wie eine Versandberechnung nach Warenwert und nach Stückzahl möglich ist, ist auch eine Berechnung der Versandkosten nach Gewicht möglich. Um sicherzustellen, dass auch ein Gewicht im Artikel eingetragen wird, kann man in den Einstellungen festlegen, dass im Backend das Gewicht > 0 überprüft wird. In der Artikeltabelle muss hierfür eine Customfunction für die Validierung eingetragen werden: warehouse::check_input_weight, das zugehörige Feld muss das Feld weight sein. Wenn es sich nicht um Variantenartikel handelt, wird das Gewicht des Hauptartikels verwendet. Wenn bei der Variante 0 als Gewicht eingetragen wird, wird ebenfalls das Gewicht des Hauptartikels zur Berechnung verwendet.
+
+## Staffelpreise
+
+Sowohl für Artikel als auch für Varianten lassen sich Staffelpreise hinterlegen. Wenn für Varianten unterschiedliche Preise gelten, so muss beim Hauptartikel der Preis 0 eingetragen werden und für jede Variante muss ein Preis erfasst werden.
+
 ## Einzelartikel (neu in 0.2)
 
 Es gibt jetzt ganz neu, auf vielfachen Wunsch, eine Möglichkeit Einzelartikel in den Shop zu packen. Das heißt: der Artikel wird nicht in der Artikeltabelle von warehouse abgelegt sondern ganz easy als REDAXO Artikel angelegt. Im REDAXO Artikel muss man dann das Modul "Warehouse Einzelartikel" einbauen. Als Moduleingabe kann man lediglich eine Artikelnummer angeben, einen Artikelnamen und einen Preis. WICHTIG: Die Artikelnummer muss unique, also einmalig sein, denn sonst findet das System den Artikel nicht korrekt. Für alle Insider: der Slice speichert zusätzlich hidden im value20 noch den Wert wh_single. Der Slice muss online sein. Über dieses Modul "Warehouse Einzelartikel" wird nur der Bestellteil (also Eingabemöglichkeit der Anzahl und Bestellbutton und Preis) ausgegeben. Die Artikelbeschreibung wird in normalen Inhaltsmodulen aufgebaut.

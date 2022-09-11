@@ -1,5 +1,14 @@
 # Warehouse - Changelog
 
+
+## Version 1.1
+- Staffelpreise hinzugefügt
+- Staffelpreise für Varianten hinzugefügt
+- edittable für Staffelpreiseingabe im Backend hinzugefügt
+- edittable sortierbar hinzugefügt
+- Versandkosten nach Gewicht hinzugefügt
+- Tabellenfeld company wird in ycom automatisch hinzugefügt
+
 ## Version 1.0
 - yform 4 Kompatibilität
 - php8 Kompatibilität

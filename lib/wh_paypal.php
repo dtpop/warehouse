@@ -98,7 +98,7 @@ class wh_paypal
                         ],
                         'shipping' => [
                             'currency_code' => rex_config::get('warehouse', 'currency'),
-                            'value' => number_format(warehouse::get_shipping_cost(), 2),
+                            'value' => number_format((float) warehouse::get_shipping_cost(), 2),
                         ],
                         /*
                         'handling' =>

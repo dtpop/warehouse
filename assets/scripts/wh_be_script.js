@@ -17,30 +17,46 @@ $(function () {
         $(this).next('.wh-klappauf').toggleClass('open');
     });
 
+    wh_edittable();
 
-    let n = 0;
-    $('.edittable.wh_relayprice').each(function() {
-        n++;
-        let $elem = $(this);
-        let the_id = $elem[0].id;
-    
-        window['mytable'+n] = $('#'+the_id).editTable({
-            data: [['']],           // Fill the table with a js array (this is overridden by the textarea content if not empty)
-            tableClass: 'inputtable',   // Table class, for styling
-            jsonData: false,        // Fill the table with json data (this will override data property)
-            headerCols: ["Menge", "Preis"],
-            maxRows: 999,           // Max number of rows which can be added
-            first_row: false,        // First row should be highlighted?
-            row_template: false,    // An array of column types set in field_templates
-            field_templates: false, // An array of custom field type objects
+    function wh_edittable() {
+        let n = 0;
+        $('.edittable.wh_relayprice').each(function() {
+            n++;
+            let $elem = $(this);
+            let the_id = $elem[0].id;
 
-            // Validate fields
-            validate_field: function (col_id, value, col_type, $element) {
-                return true;
+            if (!$elem.hasClass('has_edittable')) {
+                $elem.addClass('has_edittable');
+            
+                window['mytable'+n] = $('#'+the_id).editTable({
+                    data: [['']],           // Fill the table with a js array (this is overridden by the textarea content if not empty)
+                    tableClass: 'inputtable',   // Table class, for styling
+                    jsonData: false,        // Fill the table with json data (this will override data property)
+                    headerCols: ["Menge", "Preis"],
+                    maxRows: 999,           // Max number of rows which can be added
+                    first_row: false,        // First row should be highlighted?
+                    row_template: false,    // An array of column types set in field_templates
+                    field_templates: false, // An array of custom field type objects
+        
+                    // Validate fields
+                    validate_field: function (col_id, value, col_type, $element) {
+                        return true;
+                    }
+                });
             }
+        
+    
         });
     
+    }
 
+    $(document).on('rex:ready', function() {
+        wh_edittable();
+        $('.edittable + table tbody').sortable();
     });
-
+    
+    
 });
+
+

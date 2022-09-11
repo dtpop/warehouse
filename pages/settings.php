@@ -67,6 +67,12 @@ $select->addOptions([
 ]);
 $field->setNotice('Es kann entweder die Warenkorbseite aufgerufen werden oder die vorherige Artikelseite. Wenn die Artikelseite aufgerufen wird, so wird showcart=1 als Get-Parameter angehängt.<br><code>rex_config::get("warehouse","cart_mode")</code>');
 
+
+$field = $form->addCheckboxField('check_weight');
+$field->setLabel('Artikelgewicht prüfen');
+$field->addOption('Artikelgewicht prüfen', "1");
+$field->setNotice('Wenn die Checkbox angewählt ist, wird bei der Artikeleingabe im Backend geprüft, ob auch ein Gewicht angegeben wurde. Es ist dann nicht möglich, Artikel ohne Gewicht zu erfassen. Für die Gewichtsprüfung muss zusätzlich in der Artikeltabelle in yform die Customfunction warehouse::check_input_weight zur Validierung verwendet werden.<br><code>rex_config::get("warehouse","check_weight")</code>');
+
 $form->addFieldset('Mehrwertsteuer Einstellungen');
 
 $field = $form->addTextField('tax_value');
