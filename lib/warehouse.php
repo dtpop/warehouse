@@ -633,7 +633,6 @@ class warehouse
         $out .= PHP_EOL;
         $out .= ($user_data['note'] ?? '') ? 'Bemerkung:' . PHP_EOL . $user_data['note'] . PHP_EOL : '';
         $out .= PHP_EOL;
-        /*
         $out .= 'Zahlungsweise: ' . self::get_payment_type($user_data['payment_type']) . PHP_EOL;
         $out .= PHP_EOL;
         if ($user_data['payment_type'] == 'direct_debit') {
@@ -645,7 +644,6 @@ class warehouse
                 $out .= 'Kontoinhaber: ' . $user_data['firstname'] . ' ' . $user_data['lastname'] . PHP_EOL;
             }
         }
-        */
 
         return $out;
     }
@@ -889,10 +887,10 @@ PayPalHttp\HttpResponse {#170 ▼
         $yf->setValueField('hidden', ['payment_type', $wh_userdata['payment_type']]);
         $yf->setValueField('hidden', ['info_news_ok', $wh_userdata['info_news_ok']]);
 
-        foreach (explode(',', rex_config::get('warehouse', 'order_email')) as $email) {
-            $yf->setActionField('tpl2email', [rex_config::get('warehouse', 'email_template_seller'), '', $email]);
+        foreach (explode(',', warehouse::get_config('order_email')) as $email) {
+            $yf->setActionField('tpl2email', [warehouse::get_config('email_template_seller'), '', $email]);
         }
-        $yf->setActionField('tpl2email', [rex_config::get('warehouse', 'email_template_customer'), 'email']);
+        $yf->setActionField('tpl2email', [warehouse::get_config('email_template_customer'), 'email']);
         $yf->setActionField('callback', ['warehouse::clear_cart']);
 
         $yf->getForm();
@@ -902,7 +900,7 @@ PayPalHttp\HttpResponse {#170 ▼
             rex_logger::factory()->log('notice', 'Warehouse Order Email sent', [], __FILE__, __LINE__);
         }
         if ($send_redirect) {
-            rex_response::sendRedirect(rex_getUrl(rex_config::get('warehouse', 'thankyou_page'), '', json_decode(rex_config::get('warehouse', 'paypal_getparams'), true), '&'));
+            rex_response::sendRedirect(rex_getUrl(warehouse::get_config('thankyou_page'), '', json_decode(rex_config::get('warehouse', 'paypal_getparams'), true), '&'));
         }
     }
 
@@ -944,7 +942,7 @@ PayPalHttp\HttpResponse {#170 ▼
             $yf->setActionField('tpl2email', [rex_config::get('warehouse', 'email_template_seller'), trim($email)]);
         }
 
-        $etpl = rex_config::get('warehouse', 'email_template_customer');
+        $etpl = warehouse::get_config('email_template_customer');
         if (rex_yform_email_template::getTemplate($etpl . '_' . rex_clang::getCurrent()->getCode())) {
             $etpl = $etpl . '_' . rex_clang::getCurrent()->getCode();
         }
@@ -969,6 +967,8 @@ PayPalHttp\HttpResponse {#170 ▼
         }
 
     }
+
+
 
     /**
      * check_input_weight
@@ -1048,19 +1048,25 @@ PayPalHttp\HttpResponse {#170 ▼
 
     }
 
-
-    /**
-     * Versucht den Warenkorb bei fehlgeschlagenem Giropay wieder zu laden
-     * @param type $reference
-     * 
-     */
-    /*
-    public static function giropay_not_approved ($reference) {
-        $order = rex_yform_manager_dataset::queryOne('SELECT session_id FROM '.rex::getTable('wh_orders').' WHERE payment_id = :payment_id AND payment_type = :payment_type',['payment_id'=>$reference,'payment_type'=>'giropay']);
-        dump($order);
-        exit;
-        
+    public static function get_config($param) {
+        $config_value = rex_config::get("warehouse", $param);
+        if (!rex_addon::get('yrewrite')->isAvailable()) {
+            return $config_value;
+        }
+        $domain = rex_yrewrite::getCurrentDomain();
+        if ($domain) {
+            $param_val = rex_config::get('warehouse',$param.'_'.$domain->getId());
+            if ($param_val) {
+                $config_value = $param_val;
+            }
+        }
+        return $config_value;
     }
-     * 
-     */
+
+
+
+
+
+
+
 }

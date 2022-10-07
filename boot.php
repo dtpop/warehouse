@@ -10,11 +10,6 @@ rex_yform::addTemplatePath($this->getPath('ytemplates'));
 
 if (rex::isBackend()) {
     rex_view::addJsFile($this->getAssetsUrl('scripts/wh_be_script.js'));
-    rex_view::addCssFile($this->getAssetsUrl('styles/wh_be_css.css'));
-    
-    rex_view::addCssFile($this->getAssetsUrl('edittable/jquery.edittable.min.css?mtime=' . filemtime($this->getAssetsPath('edittable/jquery.edittable.min.css'))));
-    rex_view::addJsFile($this->getAssetsUrl('edittable/jquery.edittable.min.js?mtime=' . filemtime($this->getAssetsPath('edittable/jquery.edittable.min.js'))));
-    
 }
 
 if (rex::isFrontend()) {
@@ -41,16 +36,11 @@ if (rex::isFrontend()) {
             warehouse::add_to_cart();
         }
         if (rex_request('action', 'string') == 'modify_cart') {
-            if (rex_request('mod','string') == 'qty') {
-                // Aufruf aus dem Warenkorb
-                warehouse::modify_qty();
-            } else {
-            // wird aufgerufen aus dem Warenkorb mit mod=+1 oder mod=-1 + art_id=... 
-                warehouse::modify_cart();
-            }
+            // wird aufgerufen aus dem Warenkorb mit mod=+1 oder mod=-1 + art_id=...
+            warehouse::modify_cart();
         }
         // löscht Anzahl 0-Artikel auf der Bestellbestätigungsseite komplett aus dem Warenkorb
-        if (rex_article::getCurrentId() == rex_config::get('warehouse', 'order_page')) {
+        if (rex_article::getCurrentId() == warehouse::get_config('order_page')) {
             warehouse::clean_cart();
         }
 
@@ -89,7 +79,7 @@ if (rex::isFrontend()) {
         $wh_prop['tree'] = warehouse::get_category_tree();
         rex::setProperty('wh_prop', $wh_prop);
 
-        if (rex_article::getCurrentId() == rex_config::get('warehouse', 'thankyou_page')) {
+        if (rex_article::getCurrentId() == warehouse::get_config('thankyou_page')) {
             // Bei Dankeseite Paypal bestätigen
             if (rex_get('paymentId')) {
                 warehouse::set_cart_from_payment_id(rex_get('paymentId'));
@@ -113,7 +103,7 @@ if (rex::isFrontend()) {
                     }
                     $order->setValue('payed',1);
                     if (!$order->save()) {
-                        rex_redirect(rex_config::get("warehouse","payment_error"));
+                        rex_redirect(warehouse::get_config("payment_error"));
                     }
 
                     // Send Mails
@@ -121,7 +111,7 @@ if (rex::isFrontend()) {
                     warehouse::update_stock();
                     warehouse::clear_cart();
                 } else {
-                    rex_redirect(rex_config::get("warehouse","payment_error"));
+                    rex_redirect(warehouse::get_config("payment_error"));
                 }
             }
         }

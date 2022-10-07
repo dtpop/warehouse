@@ -32,6 +32,10 @@ Auf einer REDAXO Artikelseite können mehrere Blöcke "Warehouse Einzelartikel" 
 
 In dieser Version wird auch immer der Mehrwertsteuersatz aus Steuersatz 1 verwendet. Es ist das auch wiederum mehr oder weniger ein Beispiel, dass das Warehouse sehr flexibel auf eigene Bedürfnisse angepasst werden kann. Wenn jetzt also die Anfrage kommt: Einzelartikel mit Varianten - geht das? Natürlich geht das, aber es ist nicht ausprogrammiert.
 
+## Multidomainfähigkeit (neu in 1.1.beta)
+
+Das Warehouse hat eine Multidomainfähigkeit bekommen. Das heißt, dass der Warenkorb, der Checkout und die E-Mail Einstellungen für jede installierte Domain individuell vorgenommen werden können. Die Parameter werden jeweils mit ihrer Domain-Id abgelegt. Es gibt also einen Eintrag `cart_page` für die allgemeine Domain und einen Eintrag `cart_page_2` für die zweite Domain. Der Aufruf `warehouse::get_config("cart_page")` liefert den gewünschten Wert für die aktuelle Domain. Wenn für die Domain kein Wert gefunden wird, wird der Standardwert aus dem Eintrag `cart_page` geliefert. Die Einträge für die Domain sind daher optional.
+
 
 ## Installation der Demo
 

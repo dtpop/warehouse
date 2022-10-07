@@ -1,6 +1,9 @@
 # Warehouse - Changelog
 
 
+## Version 1.1.1
+- Multidomainfähigkeit
+
 ## Version 1.1
 - Staffelpreise hinzugefügt
 - Staffelpreise für Varianten hinzugefügt
