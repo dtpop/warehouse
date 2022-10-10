@@ -937,9 +937,9 @@ PayPalHttp\HttpResponse {#170 ▼
         $yf->setValueField('hidden', ['lastname', $wh_userdata['lastname']]);
         $yf->setValueField('hidden', ['payment_type', $wh_userdata['payment_type']]);
 
-        foreach (explode(',', rex_config::get('warehouse', 'order_email')) as $email) {
+        foreach (explode(',', warehouse::get_config('order_email')) as $email) {
             $yf->setValueField('html', ['', $email]);
-            $yf->setActionField('tpl2email', [rex_config::get('warehouse', 'email_template_seller'), trim($email)]);
+            $yf->setActionField('tpl2email', [warehouse::get_config('email_template_seller'), trim($email)]);
         }
 
         $etpl = warehouse::get_config('email_template_customer');
