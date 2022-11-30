@@ -182,7 +182,7 @@ class warehouse
             $prev_url = self::clean_url(rex_session('current_page'));
             $deli = strpos($prev_url, '?') ? '&' : '?';
             if (rex_config::get('warehouse', 'cart_mode') == 'cart') {
-                rex_redirect(rex_config::get('warehouse', 'cart_page'));
+                rex_redirect(warehouse::get_config('cart_page'));
             } else {
                 rex_response::sendRedirect($prev_url . $deli . 'showcart=1');
             }
@@ -191,7 +191,7 @@ class warehouse
         if ($added && $old_page_id > 0) {
             // wenn in den Settings auf Cart eingestellt ist, auf Cart weiterleiten
             if (rex_config::get('warehouse', 'cart_mode') == 'cart') {
-                rex_redirect(rex_config::get('warehouse', 'cart_page'));
+                rex_redirect(warehouse::get_config('cart_page'));
             } else {
                 if (rex_request('old_url')) {
                     $oldpage = rex_request('old_url');
@@ -211,7 +211,7 @@ class warehouse
             $oldpage = rtrim(rex::getServer(), '/') . rex_getUrl(rex_request('current_article'), '', ['error' => 1]);
             rex_response::sendRedirect($oldpage);
         } else {
-            rex_redirect(rex_config::get('warehouse', 'cart_page'));
+            rex_redirect(warehouse::get_config('cart_page'));
         }
     }
 
@@ -238,7 +238,7 @@ class warehouse
         if (rex_request('showcart', 'int')) {
             self::redirect_from_cart();
         } else {
-            rex_redirect(rex_config::get('warehouse', 'cart_page'));
+            rex_redirect(warehouse::get_config('cart_page'));
         }
     }
 
