@@ -168,8 +168,62 @@ class wh_articles extends \rex_yform_manager_dataset {
         $query->where('parent_id',$this->id)->orderBy('prio');
         return $query->find();        
     }
-  
-    
-    
+    public static function get_attributes_for_article($article) {
+
+        $clang = rex_clang::getCurrentId();
+
+        $atg = self::query(rex::getTable('wh_attributegroups'))
+            ->where('id', $article->attributegroup_id)
+            ->findOne()
+            ;
+
+        if (!$atg) {
+            return [];
+        }
+
+        $at = self::query(rex::getTable('wh_attributes'))
+            ->alias('at')
+            ->whereRaw('FIND_IN_SET (id, "'.$atg->attributes.'")')
+            ->find()
+            ;
+
+        $outdata = [];
+
+        foreach ($at as $k=>$attr) {
+            $data = self::query(rex::getTable('wh_attribute_values'))
+                ->alias('av')
+                ->leftJoin('rex_wh_attributes', 'at', 'av.attribute_id', 'at.id')
+                ->select('at.name_' . $clang, 'at_name')
+                ->select('at.unit', 'at_unit')
+                ->select('at.type', 'at_type')
+                ->select('at.orderable', 'at_orderable')
+                ->select('at.whattrid', 'at_whattrid')
+                ->where('av.attribute_id', $attr->id)
+                ->where('av.article_id', $article->id)
+                ->orderBy('at.prio')
+                ->orderBy('av.prio')
+                ->find();
+            $outdata[] = [
+                'attr'=>$attr->getData(),
+                'data'=>$data
+                ];
+        }
+
+        return $outdata;
+    }
+
+    public static function attr_to_array($values) {
+        $a1 = explode('|',$values);
+        $out = [];
+        foreach ($a1 as $v) {
+            $a2 = explode('=',$v);
+            if (isset($a2[1])) {
+                $out[$a2[1]] = $a2[0];
+            } else {
+                $out[$a2[0]] = $a2[0];
+            }
+        }
+        return $out;
+    }
 
 }
