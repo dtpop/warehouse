@@ -26,8 +26,7 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
         
         $values = $this->fetchValues();
         $values = $this->rearange_widget_values($values);
-       
-        if (!$values) {
+        if (!$values || count($values) <= 0) {
             $values = $this->load_values();
         }
         
@@ -73,8 +72,9 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
                     $n['field'] .= '<thead>';
                     $n['field'] .= '<tr><th>Nr.</th><th>Label</th><th>'.($attr['pricemode'] == 'absolute' ? 'Preis' : 'Mehr-/Minderpreis').'</th><th>Lieferbar</th><th></th></tr>';
                     $n['field'] .= '</thead><tbody>';
-                    
-                    if (is_array($values[$i])) {
+
+                    if (is_array($values) && count($values) >0 && isset($values[$i]) &&
+                        is_array($values[$i]) && count($values[$i]) > 0) {
                         foreach ($values[$i] as $v) {
                             $n['field'] .= '<tr><td>'
                                     . '<input type="text" id="widget_attributes_'.$i.'" name="'.$name."[$i][value][]".'" value="' . $v['value'] . '" />'
@@ -88,7 +88,7 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
                         }
                     }
                     
-                    if (!$values[$i]) {
+                    if (!isset($values[$i])) {
                         $n['field'] .= '<tr><td>'
                                 . '<input type="text" id="widget_attributes_'.$i.'" name="'.$name."[$i][value][]".'" />'
                                 . '</td><td>'
@@ -101,7 +101,7 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
                     }
                     
                     $n['field'] .= '</tbody></table>';
-                    
+
 
 //                    $n['field'] = '<textarea class="form-control" type="text" id="widget_attributes_'.$i.'" name="'.$name."[$i]".'">'.$values[$i].'</textarea>';
                 
@@ -272,8 +272,7 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
      * Lädt die gespeicherten Werte
      */
     private function load_values() {
-        return [];
-        
+
         $main_id = $this->params['main_id'];
         $attributes_for_article = $this->get_attributes_for_article();
         $attribute_value_table = $this->elements['table_attributevalues'];
