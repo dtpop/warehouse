@@ -25,6 +25,9 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
         ++$counter;
         
         $values = $this->fetchValues();
+
+//        dump($values);
+
         $values = $this->rearange_widget_values($values);
        
         if (!$values) {
@@ -73,8 +76,10 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
                     $n['field'] .= '<thead>';
                     $n['field'] .= '<tr><th>Nr.</th><th>Label</th><th>'.($attr['pricemode'] == 'absolute' ? 'Preis' : 'Mehr-/Minderpreis').'</th><th>Lieferbar</th><th></th></tr>';
                     $n['field'] .= '</thead><tbody>';
+
+//                    dump($values);
                     
-                    if (is_array($values[$i])) {
+                    if (isset($values[$i]) && is_array($values[$i])) {
                         foreach ($values[$i] as $v) {
                             $n['field'] .= '<tr><td>'
                                     . '<input type="text" id="widget_attributes_'.$i.'" name="'.$name."[$i][value][]".'" value="' . $v['value'] . '" />'
@@ -88,7 +93,7 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
                         }
                     }
                     
-                    if (!$values[$i]) {
+                    if (!isset($values[$i]) || !$values[$i]) {
                         $n['field'] .= '<tr><td>'
                                 . '<input type="text" id="widget_attributes_'.$i.'" name="'.$name."[$i][value][]".'" />'
                                 . '</td><td>'
@@ -126,7 +131,7 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
 //        $this->params['value_pool']['sql'][$this->getElement(1)] = json_encode($this->getValue());
         
         if ($this->params['send'] && $this->fetchValues()) {
-//            $this->save_values();
+            $this->save_values();
         }
 
         
@@ -205,20 +210,24 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
     private function save_values() {
         $main_id = $this->params['main_id'];
         $values = $this->fetchValues();
-//        dump($values); exit;
         $attributes_for_article = $this->get_attributes_for_article();
         $attribute_value_table = $this->elements['table_attributevalues'];
 
+
         // alle zum Artikel gehörenden löschen
         $sql = rex_sql::factory()->setTable($attribute_value_table);
+
         $sql->setWhere('article_id = :article_id',['article_id'=>$main_id])->delete();
         
-        
+
+        /*
         // Setzt auto_increment id zurück
+        $sql = rex_sql::factory();
         $qry = "SET  @num := 0;
                 UPDATE $attribute_value_table SET id = @num := (@num+1);
                 ALTER TABLE $attribute_value_table AUTO_INCREMENT =1;";
-        $sql->setQuery($qry);        
+        $sql->setQuery($qry);
+        */
         
         foreach ($attributes_for_article as $k=>$attr) {
             $sql->setTable($this->elements['table_attributevalues']);
@@ -251,7 +260,8 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
                 $sql->setValues($insert);
                 $sql->insert();
             }
-        } 
+        }
+//        exit; 
     }
     
     
@@ -272,7 +282,7 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
      * Lädt die gespeicherten Werte
      */
     private function load_values() {
-        return [];
+//        return [];
         
         $main_id = $this->params['main_id'];
         $attributes_for_article = $this->get_attributes_for_article();
@@ -343,7 +353,7 @@ class rex_yform_value_widget_attributes extends rex_yform_value_abstract
      * 
      * @param type $params
      */
-    public static function getListValues($table, $field_name, $value) : string {
+    public static function getListValues($table, $field_name, $value) : array {
         $qry = "SELECT id, $field_name name FROM `$table` WHERE id = :id";
         
         $sql = rex_sql::factory();
